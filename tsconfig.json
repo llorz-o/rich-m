@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "baseUrl": ".",
+        "jsx": "preserve",
+        "target": "esnext",
+        "module": "esnext",
+        "sourceMap": true,
+        "strict": true,
+        "allowJs": true,
+        "noImplicitThis": true,
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "locale": "zh-cn"
+
+    },
+    "include": [
+        "./src/*",
+        "./src/**/*"
+    ],
+    "exclude": [
+        "./node_modules",
+        "**/*.spec.ts",
+        "**/*.spec.js"
+    ]
+}
