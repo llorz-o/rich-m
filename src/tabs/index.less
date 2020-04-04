@@ -1,0 +1,38 @@
+@import '../sty/var.less';
+.x-tabs {
+  display: flex;
+  flex-direction: column;
+  &--default {
+  }
+  &__wrap {
+    width: 100%;
+    overflow-y: hidden;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  &__nav {
+    display: flex;
+    position: relative;
+  }
+
+  &__indicator {
+    position: absolute;
+    background-color: @tab-indicator-color;
+    height: 2px;
+    bottom: 0;
+  }
+
+  &__content {
+    display: flex;
+    &--animated {
+      width: 100%;
+      overflow: hidden;
+      display: block;
+    }
+  }
+  &__track {
+    flex: 1;
+    width: 100%;
+    display: flex;
+  }
+}

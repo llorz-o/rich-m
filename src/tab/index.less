@@ -1,0 +1,26 @@
+@import '../sty/var';
+.x-tab {
+  line-height: 40px;
+  min-height: 40px;
+  text-align: center;
+  color: @c-t2;
+  flex: 1;
+  &--active {
+    color: @c-t;
+  }
+  &__text {
+    font-size: @fs-t;
+  }
+  &__panel {
+    width: 100%;
+    padding: 10px;
+  }
+  &__panel-wrapper {
+    width: 100%;
+    flex-shrink: 0;
+    &--inactive {
+      height: 0;
+      overflow: visible;
+    }
+  }
+}

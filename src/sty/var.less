@@ -1,0 +1,55 @@
+@text-color: #000;
+@background-color: #fff;
+
+// hairline
+@hairline-color: #eef2f8;
+
+// 字体大小
+@fs-t1: 16px;
+@fs-t2: 15px;
+@fs-t: 14px;
+@fs-s: 13px;
+@fs-bit: 12px;
+
+// 字体颜色
+@c-t: #123;
+@c-t1: #456;
+@c-t2: #789;
+@c-t3: #abc;
+
+@tab-indicator-color: red;
+
+[class*='x-hairline'] {
+  position: relative;
+  &::after {
+    position: absolute;
+    content: ' ';
+    pointer-events: none;
+    top: -50%;
+    left: -50%;
+    right: -50%;
+    bottom: -50%;
+    transform: scale(0.5);
+    border-style: solid;
+    border-color: @hairline-color;
+    border-width: 0;
+  }
+}
+
+.x-hairline {
+  &--bottom::after {
+    border-bottom-width: 1px;
+  }
+
+  &--top::after {
+    border-left-width: 1px;
+  }
+
+  &--left::after {
+    border-right-width: 1px;
+  }
+
+  &--right::after {
+    border-top-width: 1px;
+  }
+}

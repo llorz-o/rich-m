@@ -6,6 +6,8 @@ const copyWebpackPlugin = require('copy-webpack-plugin')
 const config = require('./webpack.config')
 
 const webpackProdConfig = merge(config, {
+    mode: "production",
+    entry: "./index.ts",
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'js/[name].[chunkhash].js'
