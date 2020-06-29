@@ -1,1 +1,3 @@
-console.log(12)
+export * as Tabs from './src/tabs'
+
+export * as Tab from './src/tab'

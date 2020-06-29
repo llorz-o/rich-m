@@ -22,6 +22,10 @@ const router = new VueRouter({
     routes
 })
 
+Vue.config.devtools = true
+Vue.config.performance = true
+Vue.config.productionTip = false
+
 new Vue({
     el: "#app",
     render: h => h(App),
@@ -43,7 +47,7 @@ new Vue({
             })
             if (this.$route.path !== window.parent.vue.$route.path) {
                 if (window.parent.vue.$route.matched.length > 0) {
-                    console.log(window.parent.vue.$route.path);
+                    // console.log(window.parent.vue.$route.path);
                     this.$router.push(window.parent.vue.$route.fullPath)
                 }
             }

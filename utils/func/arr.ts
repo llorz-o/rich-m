@@ -5,7 +5,7 @@ type CommonArray<T> = {
 
 type FEachFetcher = <T>(item: T, index: number, self: CommonArray<T>) => void
 
-type FEach<T> = <T>(arr: CommonArray<T>, fetcher: FEachFetcher) => CommonArray<T>
+type each<T> = <T>(arr: CommonArray<T>, fetcher: FEachFetcher) => CommonArray<T>
 
 export function each<T>(arr: CommonArray<T>, cb: (item: T, index: number, self: CommonArray<T>) => void) {
   const len: number = arr.length
@@ -13,4 +13,5 @@ export function each<T>(arr: CommonArray<T>, cb: (item: T, index: number, self: 
   for (i; i < len; i++) {
     cb(arr[i], i, arr)
   }
+  return arr
 }

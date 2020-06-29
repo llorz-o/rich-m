@@ -11,10 +11,9 @@ export default createComponent({
             type: String,
             default: ''
         },
-    },
-    data() {
-        return {
-
+        disable: {
+            type: Boolean,
+            default: false,
         }
     },
     computed: {

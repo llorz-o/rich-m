@@ -8,7 +8,7 @@ const requireComponent = require.context(
     // 是否查询其子目录
     true,
     // 匹配基础组件文件名的正则表达式
-    /[a-z-]+\.(ts|js|tsx)$/
+    /index\.tsx$/
 )
 
 requireComponent.keys().forEach(fileName => {
@@ -19,12 +19,11 @@ requireComponent.keys().forEach(fileName => {
         camelCase(
             // 获取和目录深度无关的文件名
             fileName
-            .split('/')
-            .pop()
+            .split('/')[1]
             .replace(/\.\w+$/, '')
         )
     )
-    // console.log(componentName);
+    console.log(componentName, componentConfig);
     // 全局注册组件
     Vue.component(
         componentName,

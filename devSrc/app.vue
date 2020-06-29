@@ -1,16 +1,6 @@
 <template>
-  <div class="main">
-    <div class="topNav">12</div>
-    <div class="bottomContent">
-      <div class="leftNav">
-        <router-link to="/home">home</router-link>
-        <router-link to="/tabs">tabs</router-link>
-      </div>
-      <div class="context">
-        <router-view></router-view>
-      </div>
-      <Simulator />
-    </div>
+  <div class="App">
+    <router-view></router-view>
   </div>
 </template>
 
@@ -18,9 +8,9 @@
 export default {
   data() {
     return {
-      test: '12'
+      test: '12',
     }
-  }
+  },
 }
 </script>
 
@@ -36,13 +26,14 @@ html {
   height: 100%;
 }
 body,
-body > .main {
+body > .App {
   display: flex;
   flex: 1;
   width: 100%;
   height: 100%;
+  background-color: #f7f7f7;
 }
-.main {
+.App {
   flex-direction: column;
   border: 1px solid black;
 

@@ -5,19 +5,43 @@ const [createComponent, bem] = createNamespace('tab')
 export default createComponent({
     props: {
         isActive: Boolean,
+        isDisable: Boolean,
+        scrollable: Boolean,
+        swipeThreshold: Number,
+
     },
     methods: {
         onClick() {
+            if (this.isDisable) return
             this.$emit('click')
         }
     },
     render(h) {
-        return (<div class={bem({
-            active: this.isActive
-        })} onClick={this.onClick}>
+
+        const style = {
+            flex: 1,
+            flexShrink: null,
+            flexBasis: null,
+        }
+
+        if (this.scrollable) {
+            style.flex = 0
+            style.flexShrink = 0
+            style.flexBasis = `${88 / this.swipeThreshold}%`
+        }
+
+        return (<div
+            onClick={this.onClick}
+            style={style}
+            class={bem({
+                active: this.isActive && !this.isDisable,
+                disable: this.isDisable
+            })}>
+            {this.slots('tab-left')}
             <div class={bem('text')}>
                 {this.slots()}
             </div>
+            {this.slots('tab-right')}
         </div>)
     }
 })
