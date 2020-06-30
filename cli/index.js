@@ -1,11 +1,15 @@
-import {
-    program
-} from 'commander' // 定制化命令行
+#! /usr/bin/env node
 
-import shelljs from "shelljs" // 编辑自动化脚本,执行shell命令
+const program = require("commander") // 定制化命令行
 
-import dev from './command/dev'
+const shelljs = require("shelljs") // 编辑自动化脚本,执行shell命令
 
-program.version("0.0.1")
+const dev = require("./command/dev")
+const build = require("./command/build")
+
+program.version("0.0.1", "-v", "--version")
 
 program.command("dev").description("本地开发服务").action(dev)
+program.command("build").description("打包构建").action(build)
+
+program.parse(process.argv)

@@ -4,7 +4,7 @@
   "description": "rich移动端组件库",
   "main": "index.js",
   "bin": {
-    "rich": "./cli/index.js"
+    "rich": "cli/index.js"
   },
   "scripts": {
     "test": "jest",
