@@ -8,19 +8,28 @@ import { MixinParent } from '../mixins/relation'
 const [createComponent, bem] = createNamespace('tabs')
 
 import Title from './title'
-import Content from './content'
-
+import Content, { IContent } from './content'
 
 export default createComponent({
     props: {
+        // tab 切换左右滑动动画效果
         animated: Boolean,
+        // 手势
         swiper: Boolean,
+        // 粘性
         sticky: Boolean,
+        // 上下滚动
         scroll: Boolean,
+        // 一栏对多显示的 tab 标签
         swipeThreshold: {
             type: Number,
             default: 4,
         },
+        // tabs 样式风格
+        type: {
+            type: String,
+            default: "default" // "card"
+        }
     },
     mixins: [MixinParent('xTabs')],
     data() {
@@ -29,6 +38,9 @@ export default createComponent({
             currentIndex: 0,
             indicatorStyle: null,
             maxTitleWidth: 0,
+            tabsWidth: 0,
+            panelsHeight: null,
+            scrollLock: false
         }
     },
     watch: {
@@ -91,7 +103,14 @@ export default createComponent({
             }
             this.onClickTitle(this.currentIndex)
         },
-        onClickTitle(index) {
+        // 点击标题栏
+        onClickTitle(index: number) {
+            this.scrollLock = true
+            this.scrollTitleTo(index)
+            if (this.scroll) (this.$refs.content as IContent).scrollToIndexPosition(this.currentIndex)
+        },
+        // 滚动标题栏
+        scrollTitleTo(index) {
             this.currentIndex = index
             if (this.scrollable) {
                 index = index < 2 ? 2 : index
@@ -99,10 +118,30 @@ export default createComponent({
                 const title = this.$refs.title
                 scrollLeftTo(tabList as HTMLElement, (index - 2) * Number(((title as Vue).$el as Element).clientWidth || '0'), 0.3)
             }
-        }
+        },
+        getPanelsHeight(scrollTop: number = 0) {
+            let panelsHeight = []
+            let scrollHeight = 0
+            let _currentIndex = null
+            each<Vue>(this.children, (tab, index) => {
+                let tabClientHeight = tab.$el.clientHeight
+                scrollHeight += tabClientHeight
+                panelsHeight.push(tabClientHeight)
+                if (scrollHeight > scrollTop && _currentIndex == null) _currentIndex = index
+            })
+            this.panelsHeight = panelsHeight
+            return _currentIndex
+        },
+        onDebounceScroll(scrollTop) {
+            let _currentIndex = this.getPanelsHeight(scrollTop)
+            if (this.scrollLock) return this.scrollLock = false
+            this.scrollTitleTo(Number(_currentIndex || '0'))
+        },
     },
     mounted() {
         this.setIndicator()
+        this.tabsWidth = this.$el.innerWidth
+        this.getPanelsHeight()
     },
     render(h) {
 
@@ -115,6 +154,7 @@ export default createComponent({
                 isDisable={vnode.disable}
                 scrollable={this.scrollable}
                 swipeThreshold={this.swipeThreshold}
+                tabsWidth={this.tabsWidth}
                 scopedSlots={{
                     ['tab-left']: () => vnode.$slots['tab-left'],
                     ['tab-right']: () => vnode.$slots['tab-right'],
@@ -124,7 +164,7 @@ export default createComponent({
             </Title>);
         })
 
-        return (<div class={bem(['default'])}>
+        return (<div class={bem([this.type])}>
             <div class={[bem('wrap', {
                 sticky: this.sticky
             }), 'x-hairline--bottom',]}>
@@ -135,7 +175,15 @@ export default createComponent({
                 </div>
                 {this.slots("nav-right")}
             </div>
-            <Content isAnimated={this.animated} isSwiper={this.swiper} currentIndex={this.currentIndex} onSwiper={this.onSwiper}>
+            <Content
+                ref="content"
+                isScroll={this.scroll}
+                isAnimated={this.animated}
+                isSwiper={this.swiper}
+                panelsHeight={this.panelsHeight}
+                currentIndex={this.currentIndex}
+                onSwiper={this.onSwiper}
+                onDebounceScroll={this.onDebounceScroll}>
                 {this.slots()}
             </Content>
         </div>)

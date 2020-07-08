@@ -18,14 +18,15 @@ export default createComponent({
     },
     computed: {
         show() {
-            return this.parent.currentIndex === this.index
+            if (this.parent.scroll) return true
+            else this.parent.currentIndex === this.index
         }
     },
-    render(h, ctx) {
+    render(h) {
 
         let { show, slots } = this
 
-        if (this.parent.animated) {
+        if (this.parent.animated && !this.parent.scroll) {
             return (<div class={bem('panel-wrapper', { inactive: !this.show })}>
                 <div class={bem('panel')}>
                     {slots()}

@@ -8,7 +8,10 @@ export default createComponent({
         isDisable: Boolean,
         scrollable: Boolean,
         swipeThreshold: Number,
-
+        tabsWidth: {
+            type: Number,
+            default: 0,
+        }
     },
     methods: {
         onClick() {
@@ -28,6 +31,8 @@ export default createComponent({
             style.flex = 0
             style.flexShrink = 0
             style.flexBasis = `${88 / this.swipeThreshold}%`
+        } else {
+            style.flexBasis = `${this.tabsWidth / this.swipeThreshold}%`
         }
 
         return (<div

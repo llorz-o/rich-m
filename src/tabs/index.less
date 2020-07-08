@@ -26,6 +26,7 @@
     height: 55px;
     padding-bottom: 15px;
     overflow-x: auto;
+    overflow-y: hidden;
   }
 
   &__indicator {
@@ -41,6 +42,12 @@
       width: 100%;
       overflow: hidden;
       display: block;
+    }
+    &--scroll {
+      display: block;
+      min-height: 200px;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
   }
   &__track {

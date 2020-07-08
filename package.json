@@ -8,9 +8,9 @@
   },
   "scripts": {
     "test": "jest",
-    "dev": "node ./cli/dev.js",
-    "build": "node ./cli/build.js",
-    "build:demo": "node ./cli/demo.build.js"
+    "dev": "node ./cli/old/dev.js",
+    "build": "node ./cli/old/build.js",
+    "build:demo": "node ./cli/old/demo.build.js"
   },
   "repository": {
     "type": "git",

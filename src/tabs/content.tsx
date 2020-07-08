@@ -1,20 +1,31 @@
 import Hammer from 'hammerjs'
 
+import { debounce } from 'u@/index'
+import { scrollTopTo } from './utils'
+
 import { createNamespace } from 'u@/create'
 
 const [createComponent, bem] = createNamespace('tabs')
+
+export interface IContent extends Vue {
+  scrollToIndexPosition(index: number)
+}
 
 export default createComponent({
   props: {
     isAnimated: Boolean,
     isSwiper: Boolean,
-    currentIndex: Number
+    isScroll: Boolean,
+    currentIndex: Number,
+    panelsHeight: Array,
   },
   data() {
     return {
       isPan: false,
       deltaX: 0,
       contentWidth: 0,
+      contentClientHeight: 0,
+      contentScrollHeight: 0,
     }
   },
   computed: {
@@ -30,6 +41,9 @@ export default createComponent({
       }
 
       return {}
+    },
+    maxScrollDistance() {
+      return this.contentScrollHeight - this.contentClientHeight
     }
   },
   render(h) {
@@ -38,7 +52,7 @@ export default createComponent({
 
     let Content
 
-    if (this.isAnimated || this.isSwiper) {
+    if ((this.isAnimated || this.isSwiper) && !this.isScroll) {
 
       Content = (<div class={bem('track')} style={this.style}>
         {slots()}
@@ -46,34 +60,58 @@ export default createComponent({
 
     } else {
       Content = slots()
-
     }
 
-    return (<div class={bem('content', { animated: this.isAnimated })} >
+    return (<div class={bem('content', { animated: this.isAnimated, scroll: this.isScroll })} >
       {Content}
     </div>)
 
   },
-  mounted() {
-    // 滑动切换
-    if (this.isSwiper) {
+  methods: {
+    // 左右滑动
+    horizontalSwiper() {
       let contentContrl = new Hammer(this.$el)
 
       this.contentWidth = this.$el.clientWidth
 
-      contentContrl.on("pan", e => {
+      contentContrl.get("pan").set({
+        direction: Hammer.DIRECTION_HORIZONTAL
+      })
+
+      contentContrl.on("panmove", e => {
         this.isPan = true
-        let { deltaX } = e
-        this.deltaX = deltaX
+        this.deltaX = e.deltaX
       })
 
-      contentContrl.on("panend", e => {
+      contentContrl.on("panend", () => {
         this.isPan = false
-        if (Math.abs(this.deltaX) > 80) {
-          this.$emit("swiper", this.deltaX < 0 ? 1 : -1)
-        }
+        if (Math.abs(this.deltaX) > 80) this.$emit("swiper", this.deltaX < 0 ? 1 : -1)
       })
+    },
+    // 上下滑动
+    verticalSwiper() {
+      // scrollHeight
+      // scrollTop
+      // clientHeight
+      this.contentClientHeight = this.$el.clientHeight
+      this.contentScrollHeight = this.$el.scrollHeight
+      const debounceEmitScrollEvent = debounce(() => this.$emit("debounceScroll", this.$el.scrollTop), 300)
+      this.$el.addEventListener("scroll", () => debounceEmitScrollEvent())
+    },
+    // 上下滚动至下标所在位置 
+    scrollToIndexPosition(index: number) {
+      if (!Array.isArray(this.panelsHeight)) return
+      let _scrollTopDistance = 0
+      for (let i = 0; i < index; i++) {
+        _scrollTopDistance += Number(this.panelsHeight[i] || '0')
+      }
+      if (_scrollTopDistance > this.maxScrollDistance) _scrollTopDistance = this.maxScrollDistance
+      scrollTopTo(this.$el as HTMLElement, _scrollTopDistance, .3)
     }
-
+  },
+  mounted() {
+    // 滑动切换
+    if (this.isSwiper && !this.isScroll) this.verticalSwiper()
+    if (this.isScroll) this.verticalSwiper()
   }
 })

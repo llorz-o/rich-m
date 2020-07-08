@@ -2,7 +2,7 @@
 
 const webpack = require('webpack')
 
-const demoConfig = require('../webpack.demo')
+const demoConfig = require('../../webpack.demo')
 
 let result = (() => new Promise(resolve => {
     webpack(demoConfig, (err, stats) => {

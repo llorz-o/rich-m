@@ -2,16 +2,25 @@
   <div class="Dev">
     <div class="fill" style="height:300px;"></div>
     <div class="content" style="height:400px">
-      <tabs sticky scroll animated swiper>
-        <tab title="tab1">1</tab>
-        <tab title="tab2">2</tab>
-        <tab title="tab3">3</tab>
-        <tab title="tab4">4</tab>
-        <tab title="tab5">5</tab>
-        <tab title="tab6">6</tab>
-        <template #nav-right>
-          <div class="navRight">12</div>
-        </template>
+      <tabs sticky animated scroll swiper>
+        <tab title="tab1">
+          <div class="box">1</div>
+        </tab>
+        <tab title="tab2">
+          <div class="box">2</div>
+        </tab>
+        <tab title="tab3">
+          <div class="box">3</div>
+        </tab>
+        <tab title="tab4">
+          <div class="box">4</div>
+        </tab>
+        <tab title="tab5">
+          <div class="box">5</div>
+        </tab>
+        <tab title="tab6">
+          <div class="box">6</div>
+        </tab>
       </tabs>
     </div>
     <div class="fill" style="height:600px;"></div>
@@ -37,6 +46,12 @@
     border-left: 1px solid #333;
     text-align: center;
     line-height: 40px;
+  }
+  .box {
+    height: 200px;
+  }
+  .x-tabs__content {
+    height: 400px;
   }
 }
 </style>
