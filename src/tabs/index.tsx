@@ -84,6 +84,7 @@ export default createComponent({
                 }
             })
         },
+        // 手势滑动
         onSwiper(offset) {
             let _currentIndex = this.currentIndex
             let effectCurrentIndexsLen = this.effectCurrentIndexs.length
@@ -119,6 +120,7 @@ export default createComponent({
                 scrollLeftTo(tabList as HTMLElement, (index - 2) * Number(((title as Vue).$el as Element).clientWidth || '0'), 0.3)
             }
         },
+        // 获取所有面板高度
         getPanelsHeight(scrollTop: number = 0) {
             let panelsHeight = []
             let scrollHeight = 0
@@ -132,6 +134,7 @@ export default createComponent({
             this.panelsHeight = panelsHeight
             return _currentIndex
         },
+        // 内容滚动事件处理
         onDebounceScroll(scrollTop) {
             let _currentIndex = this.getPanelsHeight(scrollTop)
             if (this.scrollLock) return this.scrollLock = false
@@ -147,9 +150,12 @@ export default createComponent({
 
         const { indicatorStyle } = this
 
+        const Indicator = <div class={bem('indicator')} style={indicatorStyle}></div>
+
         const Nav = this.children.map((vnode, index) => {
             return (<Title
                 ref="title"
+                style={vnode.titleStyle}
                 isActive={index === this.currentIndex}
                 isDisable={vnode.disable}
                 scrollable={this.scrollable}
@@ -169,9 +175,9 @@ export default createComponent({
                 sticky: this.sticky
             }), 'x-hairline--bottom',]}>
                 {this.slots("nav-left")}
-                <div class={bem('nav')} ref="tabList">
+                <div class={bem('nav', [this.type])} ref="tabList">
                     {Nav}
-                    <div class={bem('indicator')} style={indicatorStyle}></div>
+                    {this.type === 'card' ? "" : Indicator}
                 </div>
                 {this.slots("nav-right")}
             </div>

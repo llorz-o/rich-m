@@ -7,6 +7,7 @@ const [createComponent, bem] = createNamespace('tab')
 export default createComponent({
     mixins: [MixinChildren('xTabs')],
     props: {
+        titleStyle: null,
         title: {
             type: String,
             default: ''
@@ -14,7 +15,7 @@ export default createComponent({
         disable: {
             type: Boolean,
             default: false,
-        }
+        },
     },
     computed: {
         show() {

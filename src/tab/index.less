@@ -1,9 +1,7 @@
 @import '../sty/var';
 .x-tab {
-  line-height: 40px;
-  min-height: 40px;
   text-align: center;
-  color: @c-t2;
+  color: @tab-color;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,13 +13,13 @@
   white-space: nowrap;
 
   &--active {
-    color: @c-t;
+    color: @tab-active-color;
   }
   &--disable {
     cursor: no-drop;
   }
   &__text {
-    font-size: @fs-t;
+    font-size: @tab-text-color;
   }
   &__panel {
     width: 100%;

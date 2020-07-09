@@ -2,7 +2,7 @@
   <div class="Dev">
     <div class="fill" style="height:300px;"></div>
     <div class="content" style="height:400px">
-      <tabs sticky animated scroll swiper>
+      <tabs type="card" sticky animated scroll swiper>
         <tab title="tab1">
           <div class="box">1</div>
         </tab>
@@ -15,12 +15,12 @@
         <tab title="tab4">
           <div class="box">4</div>
         </tab>
-        <tab title="tab5">
+        <!-- <tab title="tab5">
           <div class="box">5</div>
         </tab>
         <tab title="tab6">
           <div class="box">6</div>
-        </tab>
+        </tab> -->
       </tabs>
     </div>
     <div class="fill" style="height:600px;"></div>
@@ -50,8 +50,11 @@
   .box {
     height: 200px;
   }
-  .x-tabs__content {
+  .x-tabs {
     height: 400px;
+  }
+  .x-tabs__content {
+    // height: 400px;
   }
 }
 </style>
