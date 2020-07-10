@@ -18,6 +18,7 @@ export default createComponent({
     isScroll: Boolean,
     currentIndex: Number,
     panelsHeight: Array,
+    contentHeight: String
   },
   data() {
     return {
@@ -62,9 +63,9 @@ export default createComponent({
       Content = slots()
     }
 
-    return (<div class={bem('content', { animated: this.isAnimated, scroll: this.isScroll })} >
+    return (<div class={bem('content', { animated: this.isAnimated, scroll: this.isScroll })} style={{ height: this.contentHeight }} >
       {Content}
-    </div>)
+    </div >)
 
   },
   methods: {
@@ -111,7 +112,7 @@ export default createComponent({
   },
   mounted() {
     // 滑动切换
-    if (this.isSwiper && !this.isScroll) this.verticalSwiper()
+    if (this.isSwiper && !this.isScroll) this.horizontalSwiper()
     if (this.isScroll) this.verticalSwiper()
   }
 })

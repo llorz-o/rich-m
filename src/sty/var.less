@@ -46,43 +46,10 @@
 @tabs-nav-card-border-color: @tabs-base-color;
 @tabs-nav-background-color: @background-color;
 @tabs-nav-card-active-background-color: @tabs-base-color;
+@tabs-content-background-color: @background-color;
 
 // tab
 @tab-color: @fc-4;
 @tab-active-color: @fc-5;
 @tab-text-color: @fc-4;
-
-[class*='x-hairline'] {
-  position: relative;
-  &::after {
-    position: absolute;
-    content: ' ';
-    pointer-events: none;
-    top: -50%;
-    left: -50%;
-    right: -50%;
-    bottom: -50%;
-    transform: scale(0.5);
-    border-style: solid;
-    border-color: @hairline-color;
-    border-width: 0;
-  }
-}
-
-.x-hairline {
-  &--bottom::after {
-    border-bottom-width: 1px;
-  }
-
-  &--top::after {
-    border-left-width: 1px;
-  }
-
-  &--left::after {
-    border-right-width: 1px;
-  }
-
-  &--right::after {
-    border-top-width: 1px;
-  }
-}
+@tab-disable-color: @fc-2;

@@ -2,6 +2,7 @@ const path = require('path')
 const vueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
+    mode: "production",
     module: {
         rules: [{
                 test: /\.vue$/,
@@ -12,7 +13,8 @@ module.exports = {
                         tsx: 'babel-loader!ts-loader'
                     }
                 }
-            }, {
+            },
+            {
                 test: /\.tsx?$/,
                 use: ['babel-loader', {
                         loader: 'ts-loader',
@@ -27,7 +29,8 @@ module.exports = {
             {
                 test: /\.css$/,
                 loader: "css-loader"
-            }, {
+            },
+            {
                 test: /\.less$/,
                 use: [
                     'vue-style-loader',
@@ -40,9 +43,8 @@ module.exports = {
     resolve: {
         extensions: ['.tsx', '.ts', '.js', 'vue', 'json'],
         alias: {
-            "@": path.resolve(__dirname, '.'),
+            "@": path.resolve(__dirname, './'),
             "u@": path.resolve(__dirname, 'utils/'),
-            // "sty": path.resolve(__dirname, 'src/sty/'),
         }
     },
     output: {

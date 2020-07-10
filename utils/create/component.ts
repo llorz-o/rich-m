@@ -40,7 +40,7 @@ function install(this: ComponentOptions<Vue>, Vue: VueConstructor) {
 }
 
 export const createComponent = (name: string) => {
-  return function<Props = Record<string, any>, Events = {}, Slots = {}>(sfc: XComponentOption<Vue>): TscComponent<Props, Events, Slots> {
+  return function <Props = Record<string, any>, Events = {}, Slots = {}>(sfc: XComponentOption<Vue>): TscComponent<Props, Events, Slots> {
     if (!sfc.functional) {
       sfc.mixins = sfc.mixins || []
       sfc.mixins.push(MixinExtractSlot)

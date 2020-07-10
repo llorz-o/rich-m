@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "rich移动端组件库",
   "main": "index.js",
-  "bin": {
-    "rich": "cli/index.js"
-  },
   "scripts": {
     "test": "jest",
     "dev": "node ./cli/old/dev.js",

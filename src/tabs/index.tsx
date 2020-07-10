@@ -20,6 +20,8 @@ export default createComponent({
         sticky: Boolean,
         // 上下滚动
         scroll: Boolean,
+        // 正文高度
+        contentHeight: String,
         // 一栏对多显示的 tab 标签
         swipeThreshold: {
             type: Number,
@@ -29,7 +31,7 @@ export default createComponent({
         type: {
             type: String,
             default: "default" // "card"
-        }
+        },
     },
     mixins: [MixinParent('xTabs')],
     data() {
@@ -177,7 +179,7 @@ export default createComponent({
                 {this.slots("nav-left")}
                 <div class={bem('nav', [this.type])} ref="tabList">
                     {Nav}
-                    {this.type === 'card' ? "" : Indicator}
+                    {this.type === 'default' ? Indicator : ""}
                 </div>
                 {this.slots("nav-right")}
             </div>
@@ -186,6 +188,7 @@ export default createComponent({
                 isScroll={this.scroll}
                 isAnimated={this.animated}
                 isSwiper={this.swiper}
+                contentHeight={this.contentHeight}
                 panelsHeight={this.panelsHeight}
                 currentIndex={this.currentIndex}
                 onSwiper={this.onSwiper}

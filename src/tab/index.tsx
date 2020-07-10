@@ -20,7 +20,7 @@ export default createComponent({
     computed: {
         show() {
             if (this.parent.scroll) return true
-            else this.parent.currentIndex === this.index
+            else return this.parent.currentIndex === this.index
         }
     },
     render(h) {
