@@ -1,0 +1,6 @@
+tasks:
+    - init: npm run bootstrap
+      command: npm run bootstrap && npm run doc
+ports:
+    - port: 5000
+      onOpen: open-preview

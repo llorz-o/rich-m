@@ -1,94 +1,97 @@
 {
-  "name": "rich-m",
-  "version": "1.0.0",
-  "description": "rich移动端组件库",
-  "main": "index.js",
-  "scripts": {
-    "test": "jest",
-    "dev": "node ./cli/old/dev.js",
-    "build": "node ./cli/old/build.js",
-    "build:demo": "node ./cli/old/demo.build.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/llorz-o/rich-m.git"
-  },
-  "keywords": [
-    "rich"
-  ],
-  "author": "jojo",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/llorz-o/rich-m/issues"
-  },
-  "homepage": "https://github.com/llorz-o/rich-m#readme",
-  "dependencies": {
-    "hammerjs": "^2.0.8",
-    "vue": "^2.6.11",
-    "vue-router": "^3.1.6"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/plugin-proposal-object-rest-spread": "^7.9.0",
-    "@babel/preset-typescript": "^7.9.0",
-    "@vue/babel-helper-vue-jsx-merge-props": "^1.0.0",
-    "@vue/babel-preset-jsx": "^1.1.2",
-    "@vue/test-utils": "^1.0.0-beta.33",
-    "awesome-typescript-loader": "^5.2.1",
-    "babel-helper-vue-jsx-merge-props": "^2.0.3",
-    "babel-loader": "^8.1.0",
-    "babel-plugin-syntax-jsx": "^6.18.0",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-plugin-transform-vue-jsx": "^3.7.0",
-    "babel-preset-es2015": "^6.24.1",
-    "chai": "^4.2.0",
-    "commander": "^5.1.0",
-    "copy-webpack-plugin": "^5.1.1",
-    "css-loader": "^3.4.2",
-    "html-webpack-plugin": "^4.0.4",
-    "jest": "^25.4.0",
-    "less": "^3.11.1",
-    "less-loader": "^5.0.0",
-    "mocha": "^7.1.1",
-    "nyc": "^15.0.0",
-    "shelljs": "^0.8.4",
-    "source-map-loader": "^0.2.4",
-    "style-loader": "^1.1.3",
-    "ts-jest": "^25.3.0",
-    "ts-loader": "^6.2.2",
-    "ts-node": "^8.8.1",
-    "typescript": "^3.8.3",
-    "vue-jest": "^3.0.5",
-    "vue-loader": "^15.9.1",
-    "vue-style-loader": "^4.1.2",
-    "vue-template-compiler": "^2.6.11",
-    "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3",
-    "webpack-merge": "^4.2.2"
-  },
-  "jest": {
-    "testRegex": "(/test/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "vue",
-      "ts"
-    ],
-    "transform": {
-      ".*\\.(vue)$": "vue-jest",
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "**/*.{js,vue}",
-      "!**/node_modules/**"
-    ],
-    "coverageReporters": [
-      "html",
-      "text-summary"
-    ]
-  }
+	"name": "rich-m",
+	"version": "1.0.0",
+	"description": "rich移动端组件库",
+	"main": "index.js",
+	"bin": {
+		"rich": "./cli/lib/index.js"
+	},
+	"scripts": {
+		"test": "jest",
+		"bootstrap": "npm install && npm link",
+		"doc": "rich doc",
+		"dev": "rich dev && rich demo"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/llorz-o/rich-m.git"
+	},
+	"keywords": [
+		"rich"
+	],
+	"author": "jojo",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/llorz-o/rich-m/issues"
+	},
+	"homepage": "https://github.com/llorz-o/rich-m#readme",
+	"dependencies": {
+		"hammerjs": "^2.0.8",
+		"vue": "^2.6.11",
+		"vue-router": "^3.1.6"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.9.0",
+		"@babel/plugin-proposal-class-properties": "^7.8.3",
+		"@babel/plugin-proposal-object-rest-spread": "^7.9.0",
+		"@babel/preset-typescript": "^7.9.0",
+		"@vue/babel-helper-vue-jsx-merge-props": "^1.0.0",
+		"@vue/babel-preset-jsx": "^1.1.2",
+		"@vue/test-utils": "^1.0.0-beta.33",
+		"awesome-typescript-loader": "^5.2.1",
+		"babel-helper-vue-jsx-merge-props": "^2.0.3",
+		"babel-loader": "^8.1.0",
+		"babel-plugin-syntax-jsx": "^6.18.0",
+		"babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+		"babel-plugin-transform-runtime": "^6.23.0",
+		"babel-plugin-transform-vue-jsx": "^3.7.0",
+		"babel-preset-es2015": "^6.24.1",
+		"chai": "^4.2.0",
+		"commander": "^5.1.0",
+		"copy-webpack-plugin": "^5.1.1",
+		"css-loader": "^3.4.2",
+		"html-webpack-plugin": "^4.0.4",
+		"jest": "^25.4.0",
+		"less": "^3.11.1",
+		"less-loader": "^5.0.0",
+		"mocha": "^7.1.1",
+		"nyc": "^15.0.0",
+		"shelljs": "^0.8.4",
+		"source-map-loader": "^0.2.4",
+		"style-loader": "^1.1.3",
+		"ts-jest": "^25.3.0",
+		"ts-loader": "^6.2.2",
+		"ts-node": "^8.8.1",
+		"typescript": "^3.8.3",
+		"vue-jest": "^3.0.5",
+		"vue-loader": "^15.9.1",
+		"vue-style-loader": "^4.1.2",
+		"vue-template-compiler": "^2.6.11",
+		"webpack": "^4.42.1",
+		"webpack-cli": "^3.3.11",
+		"webpack-dev-server": "^3.10.3",
+		"webpack-merge": "^4.2.2"
+	},
+	"jest": {
+		"testRegex": "(/test/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+		"moduleFileExtensions": [
+			"js",
+			"json",
+			"vue",
+			"ts"
+		],
+		"transform": {
+			".*\\.(vue)$": "vue-jest",
+			"^.+\\.tsx?$": "ts-jest"
+		},
+		"collectCoverage": true,
+		"collectCoverageFrom": [
+			"**/*.{js,vue}",
+			"!**/node_modules/**"
+		],
+		"coverageReporters": [
+			"html",
+			"text-summary"
+		]
+	}
 }
