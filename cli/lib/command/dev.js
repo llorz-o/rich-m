@@ -14,15 +14,15 @@ function default_1() {
     return new Promise((resolve, reject) => {
         const devServerOptions = {
             hot: true,
-            host: 'localhost',
+            host: "localhost"
         };
         webpack_dev_server_1.default.addDevServerEntrypoints(DEV_CONFIG, devServerOptions);
         const compiler = webpack_1.default(DEV_CONFIG);
         const server = new webpack_dev_server_1.default(compiler);
-        server.listen(5000, 'localhost', (err) => {
+        server.listen(5000, "localhost", err => {
             if (err)
                 return reject(err);
-            console.log('dev server run http://localhost:5000');
+            console.log("dev server run http://localhost:5000");
             resolve();
         });
     });
