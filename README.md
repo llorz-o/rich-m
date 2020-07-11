@@ -2,8 +2,7 @@
 
 rich 组件库,移动端,ts 构建
 
-## 使用 tsc 让项目具有热更新的能力
-## 查找文件夹引入每一个组件以及生成路由
-## 第三方包
+## pad
 
-1. `npm install --save hammerjs` 手势识别
+https://5000-f5fa78e7-0798-4087-b6e7-9a305d53ac03.ws-us02.gitpod.io/
+
