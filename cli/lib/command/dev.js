@@ -14,7 +14,9 @@ function default_1() {
     return new Promise((resolve, reject) => {
         const devServerOptions = {
             hot: true,
-            host: "localhost"
+            host: "localhost",
+            overlay: true,
+            stats: "errors-only"
         };
         webpack_dev_server_1.default.addDevServerEntrypoints(DEV_CONFIG, devServerOptions);
         const compiler = webpack_1.default(DEV_CONFIG);

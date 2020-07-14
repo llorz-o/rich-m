@@ -5,10 +5,10 @@ import * as config from "../common/constant";
 export default {
 	mode: "development",
 	devtool: "cheap-eval-source-map",
-	entry: join(config.CLI_SITE, "demo/index.js"),
+	entry: join(config.CLI_SITE, "doc/index.js"),
 	plugins: [
 		new HtmlWebpackPlugin({
-			template: join(config.CLI_SITE, "demo/index.html")
+			template: join(config.CLI_SITE, "doc/index.html")
 		})
 	]
 };

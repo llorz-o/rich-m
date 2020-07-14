@@ -26,12 +26,12 @@ const path_1 = require("path");
 const html_webpack_plugin_1 = __importDefault(require("html-webpack-plugin"));
 const config = __importStar(require("../common/constant"));
 exports.default = {
-    mode: 'development',
-    devtool: 'cheap-eval-source-map',
-    entry: path_1.join(config.CLI_SITE, 'demo/index.js'),
+    mode: "development",
+    devtool: "cheap-eval-source-map",
+    entry: path_1.join(config.CLI_SITE, "demo/index.js"),
     plugins: [
         new html_webpack_plugin_1.default({
-            template: path_1.join(config.CLI_SITE, 'demo/index.html'),
-        }),
-    ],
+            template: path_1.join(config.CLI_SITE, "demo/index.html")
+        })
+    ]
 };

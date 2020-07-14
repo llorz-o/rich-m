@@ -16,18 +16,20 @@ function default_1() {
     return new Promise((resolve, reject) => {
         const devServerOptions = {
             hot: true,
-            host: 'localhost',
+            host: "localhost",
+            overlay: true,
+            stats: "errors-only"
         };
         webpack_dev_server_1.default.addDevServerEntrypoints(DEMO_CONFIG, devServerOptions);
         const compiler = webpack_1.default(DEMO_CONFIG);
         const server = new webpack_dev_server_1.default(compiler);
-        server.listen(5001, 'localhost', (err) => {
+        server.listen(5001, "localhost", err => {
             if (err) {
                 console.error(err);
                 reject(err);
                 return;
             }
-            console.log('dev server run http://localhost:5001');
+            console.log("dev server run http://localhost:5001");
             resolve();
         });
     });

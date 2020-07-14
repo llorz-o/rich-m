@@ -28,14 +28,10 @@ const config = __importStar(require("../common/constant"));
 exports.default = {
     mode: "development",
     devtool: "cheap-eval-source-map",
-    entry: path_1.join(config.CLI_SITE, "dev/index.js"),
-    watch: true,
-    watchOptions: {
-        ignored: ["node_modules"]
-    },
+    entry: path_1.join(config.CLI_SITE, "doc/index.js"),
     plugins: [
         new html_webpack_plugin_1.default({
-            template: path_1.join(config.CLI_SITE, "dev/index.html")
+            template: path_1.join(config.CLI_SITE, "doc/index.html")
         })
     ]
 };
