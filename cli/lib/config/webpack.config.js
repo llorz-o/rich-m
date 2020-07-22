@@ -101,15 +101,7 @@ exports.default = {
     plugins: [
         new vueLoaderPlugin(),
         new FriendlyErrorWebpackPlugin({
-            clearConsole: true,
-            compilationSuccessInfo: {
-                messages: [
-                    "You application is running here http://localhost:5002"
-                ],
-                notes: [
-                    "Some additionnal notes to be displayed unpon successful compilation"
-                ]
-            }
+            clearConsole: true
         })
     ]
 };

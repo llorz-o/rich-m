@@ -21,6 +21,7 @@
     "copy-webpack-plugin": "^6.0.3",
     "css-loader": "^3.6.0",
     "friendly-errors-webpack-plugin": "^1.7.0",
+    "highlight.js": "^10.1.1",
     "html-webpack-plugin": "^4.3.0",
     "less": "^3.11.3",
     "less-loader": "^6.2.0",

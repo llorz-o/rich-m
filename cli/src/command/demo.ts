@@ -3,6 +3,7 @@ import WebpackDevServer from "webpack-dev-server";
 import { merge } from "webpack-merge";
 import BaseConf from "../config/webpack.config";
 import DemoConf from "../config/demo.config";
+import { buildDocFile } from "../tasks/file";
 
 const DEMO_CONFIG = merge(
 	BaseConf as Webpack.Configuration,
@@ -27,7 +28,15 @@ export default function() {
 		);
 
 		const compiler = Webpack(DEMO_CONFIG);
-		const server = new WebpackDevServer(compiler);
+
+		const watching = compiler.watch({}, (err, stats) => {
+			console.log("change !!!!!!!!!!!!");
+			if (err) return console.error(err);
+			buildDocFile();
+		});
+
+		const server = new WebpackDevServer(compiler as Webpack.Compiler);
+
 		server.listen(5001, "localhost", err => {
 			if (err) {
 				console.error(err);

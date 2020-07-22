@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<Nav></Nav>
-		<Siderbar></Siderbar>
+		<Siderbar width="200"></Siderbar>
 		<div class="content">
 			<router-view></router-view>
 		</div>
@@ -27,7 +27,7 @@ export default {
 <style lang="less">
 @import "../../../src/sty/index.less";
 .content {
-	margin-left: 120px;
+	margin-left: 200px;
 	margin-right: 400px;
 }
 .simulationWrapper {
