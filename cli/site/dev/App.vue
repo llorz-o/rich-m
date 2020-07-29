@@ -1,27 +1,30 @@
 <template>
-  <div>
-    <div class="block">1</div>
-    <tabs>
-      <tab title="1">
-        <div class="block">2</div>
-      </tab>
-      <tab title="2">
-        <div class="block">3</div>
-      </tab>
-    </tabs>
-    <div class="block">4</div>
-    <div class="block">5</div>
-  </div>
+	<div>
+		<router-link
+			:to="item.path"
+			v-for="(item, index) in $root.localRoutes"
+			:key="index"
+		>
+			{{ item.path }}
+		</router-link>
+		<router-view></router-view>
+	</div>
 </template>
 
 <script>
-export default {}
+export default {};
 </script>
 
 <style lang="less">
-@import '../../../src/sty/index.less';
+@import "../../../src/sty/index.less";
 .block {
-  height: 300px;
-  border: 1px solid #555;
+	height: 300px;
+	border: 1px solid #555;
+}
+a {
+	line-height: 20px;
+	padding: 0 10px;
+	margin: 2px 4px;
+	border: 1px solid red;
 }
 </style>
