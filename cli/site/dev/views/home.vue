@@ -1,29 +1,57 @@
 <template>
 	<div class="home">
-		<button @click="insertStyleBlock">red</button>
-		<button @click="insertStyleBlock2">blue</button>
-		<button @click="insertStyleBlock3">insert image</button>
-		<editor ref="editor" />
+		<button
+			v-for="(item, index) in styleOptions"
+			:key="index"
+			@click="() => insertStyleBlock(item)"
+			:class="activeSty === item.styleId ? 'active' : ''"
+		>
+			{{ item.styleId }}
+		</button>
+		<button @click="insertImage">insert image</button>
+		<editor ref="editor" @style="currentSty" />
 	</div>
 </template>
 
 <script>
+/* <img class={["img"]} src="http://www.divcss5.com/uploads/allimg/130204/1_130204153950_1.png" alt="" /> */
 export default {
+	data() {
+		return {
+			activeSty: "__black",
+			styleOptions: [
+				{
+					styleId: "red",
+					style: {
+						color: "red"
+					}
+				},
+				{
+					styleId: "blue",
+					style: {
+						color: "blue"
+					}
+				},
+				{
+					styleId: "green",
+					style: {
+						color: "green"
+					}
+				}
+			]
+		};
+	},
 	methods: {
-		insertStyleBlock() {
-			this.$refs.editor.insertStyleBLock("red", {
-				color: "red"
-			});
+		insertStyleBlock({ styleId, style }) {
+			this.$refs.editor.registerColor(styleId, style);
 		},
-		insertStyleBlock2() {
-			this.$refs.editor.insertStyleBlock("blue", {
-				color: "blue"
-			});
+		insertImage() {
+			this.$refs.editor.insertImage(
+				"http://www.divcss5.com/uploads/allimg/130204/1_130204153950_1.png"
+			);
 		},
-		insertStyleBlock3() {
-			this.$refs.editor.insertStyleBlock("blue", {
-				color: "blue"
-			});
+		currentSty(styleId) {
+			this.activeSty = styleId;
 		}
 	}
 };
@@ -35,6 +63,10 @@ export default {
 		height: 30px;
 		line-height: 30px;
 		min-width: 60px;
+		margin: 0 5px;
+		&.active {
+			outline: 3px solid red;
+		}
 	}
 }
 </style>

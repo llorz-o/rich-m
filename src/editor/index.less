@@ -1,23 +1,47 @@
 .x-editor {
 	min-height: 200px;
+	font-size: 15px;
+	user-select: text;
+	overflow-y: auto;
+	outline: none;
+	cursor: text;
 	border: 1px solid black;
-	font-size: 17px;
+	padding: 5px;
+	// &[contenteditable="true"]:empty::before {
+	// 	content: attr(placeholder);
+	// }
+	box-sizing: border-box;
+	* {
+		box-sizing: border-box;
+		margin: 0;
+		padding: 0;
+	}
 	.row {
-		min-height: 20px;
-		line-height: 20px;
+		min-height: 25px;
+		line-height: 25px;
 		border-bottom: 1px solid #d5d5d5;
 	}
+
 	span {
-		// background-color: #888;
-	}
-	.img {
-		content: " ";
-		height: 30px;
-		font-size: 0;
-		display: inline-block;
-		vertical-align: bottom;
+		&.insert-ph {
+			padding: 1px;
+			background-color: greenyellow;
+		}
 	}
 
+	// 图片块
+	.image-block {
+		margin: 0 3px;
+		.image {
+			content: " ";
+			height: 30px;
+			font-size: 0;
+			display: inline-block;
+			vertical-align: bottom;
+			user-select: text;
+		}
+	}
+	// 焦点所在
 	.cursor_anchor {
 		outline: 1px solid red;
 	}

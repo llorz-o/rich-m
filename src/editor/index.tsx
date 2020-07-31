@@ -1,6 +1,6 @@
 import './index.less'
 import { createNamespace } from 'u@/create'
-import { indexOf, filter, each, toPascalCase } from '@/utils'
+import { indexOf, filter, each, toPascalCase, debounce } from '@/utils'
 import { toKebabCase } from '@/utils/format/string';
 const [createComponent, bem] = createNamespace("editor")
 /**
@@ -30,9 +30,8 @@ export default createComponent({
 			onKeyup={this.onKeyup}
 		>
 			<div class={['row', 'last-row']}>
-				<span class={["column", 'cursor_anchor']} style="color:black;">
-					<br />
-					{/* <img class={["img"]} src="http://www.divcss5.com/uploads/allimg/130204/1_130204153950_1.png" alt="" /> */}
+				<span class={["column", 'cursor_anchor', 'last-column']} data-sty-id="__black" style="color:black;">
+					&#65279;
 				</span>
 			</div>
 		</div>
@@ -43,68 +42,169 @@ export default createComponent({
 			anchor: null,
 			range: null,
 			targetDOM: null,
+			editorContent: 0,
 			anchorInfo: {},
 			currentActiveId: "__black",
-			registerStyles: {
+			// 注册字体颜色
+			registerColorMap: {
 				__black: {
 					color: "black"
 				}
 			},
-			relyList: []
+			// 注册字体样式
+			registerFontStyleMap: {
+
+			},
+			// 注册字体大小
+			registerFontSizeMap: {
+
+			},
+			// 注册字体背景色
+			registerBgColorMap: {
+
+			}
 		}
 	},
 	methods: {
 		onInput(e) {
-			console.log('input event', e);
-			this.getCursortPosition()
-			// 剔除占位符或是添加占位
+			// console.log('input event', e);
+			this.getCursortPosition(({
+				isText,
+				parentNode,
+			}) => {
+				// tag inffective tag
+				if (isText) {
+					this.addClass(parentNode, 'text-tag')
+					this.removeClass(parentNode, 'insert-ph')
+				}
+			})
 		},
 		onFocus(e) {
-			console.log('focus event', e);
+			// console.log('focus event', e);
 			setTimeout(() => this.getCursortPosition(), 50);
 
 		},
 		onChange(e) {
-			console.log("change event", e);
+			// console.log("change event", e);
 
 		},
 		onBlur(e) {
-			console.log("blur event", e);
+			// console.log("blur event", e);
 		},
 		onClick(e) {
-			console.log('click event', e);
-			this.getCursortPosition()
+			// console.log('click event', e);
+			this.getCursortPosition(({
+				isText,
+				parentNode,
+				currentNode
+			}) => {
+				let _currentNode = isText ? parentNode : currentNode
+				let inser_ph_list = document.getElementsByClassName("insert-ph")
+				each<Node>(inser_ph_list, node => {
+					if (node !== _currentNode) node && node.parentNode.removeChild(node)
+				})
+				this.insertStyleBLock(this.currentActiveId)
+			})
 		},
 		onTouchstart(e) {
-			console.log('touchstart event', e);
+			// console.log('touchstart event', e);
 
 		},
 		onKeydown(e) {
-			console.log("keydown event", e);
 			this.getCursortPosition()
+			if ((this.$el as HTMLElement).innerText.indexOf(this.editorContent) < 0) {
+				let lastColumn = this.createBlock('span', {
+					className: "column cursor_anchor last-column",
+					style: this.registerColorMap[this.currentActiveId],
+					dataStyId: this.currentActiveId,
+				}, ["\ufeff"])
+
+					; (this.$el as HTMLElement).innerText = ''
+				this.$el.appendChild(this.createBlock('div', {
+					className: "row last-row",
+				}, [
+					lastColumn
+				]))
+				e.preventDefault()
+			}
 		},
 		onKeyup(e) {
-			console.log("keyup event", e);
+			// console.log("keyup event", e);
 			// 当前节点为span 节点且子节点只有 br
 		},
-		insertStyleBLock() {
-			this.insertBlock(this.createBlock('span', {
+		// insertimage
+		insertImage(url, attrs = {}) {
+			// let imageBlock = this.createBlock('span', {
+			// 	className: "column insert-image",
+			// 	style: this.registerColorMap[this.currentActiveId],
+			// 	dataStyId: this.currentActiveId,
+			// }, [
+			// 	"\ufeff",
+			// 	this.createBlock('img', {
+			// 		src: url,
+			// 		className: "column img",
+			// 		...attrs
+			// 	}),
+			// 	"\ufeff"
+			// ])
+			// let carseNode = imageBlock.childNodes[2]
+			// this.insertBlock(imageBlock, 1, carseNode)
+
+			let imageBlock = this.createBlock("span", {
+				className: "column insert-image",
+				style: this.registerColorMap[this.currentActiveId],
+				dataStyId: this.currentActiveId,
+			}, [
+				this.createBlock('span', {
+					className: "image-block",
+					contenteditable: "false"
+				}, [
+					this.createBlock('img', {
+						src: url,
+						className: "image",
+						...attrs
+					})
+				]),
+				"\ufeff"
+			])
+			this.insertBlock(imageBlock)
+			this.setCurrentCaretPosition(imageBlock, 1, imageBlock.childNodes[1])
+		},
+		// 注册样式
+		registerColor(id, style = {}) {
+			this.currentActiveId = id
+			this.registerColorMap[id] = style
+			this.insertStyleBLock(id)
+		},
+		// 注册字体
+		registreFont(id, style = {}) {
+
+		},
+		// 插入样式块,为当前激活样式
+		insertStyleBLock(id) {
+			let insertTag = this.createBlock('span', {
 				className: "column insert-ph",
-				style: {
-					color: "red",
-					fontWeight: "600",
-				}
-			}, ["\ufeff"]))
+				style: this.registerColorMap[id],
+				dataStyId: id,
+			}, ["\ufeff"])
+
+			this.insertBlock(insertTag)
+			this.setCurrentCaretPosition(insertTag, 1)
 		},
 		// 插入
 		insertBlock(insertTag) {
-			let { isBrBlock, isText, textNodeValue, anchor, currentNode, childNodes, targetDOM, parentNode } = this.anchorInfo
-			if (isBrBlock) {
-				parentNode.replaceChild(insertTag, targetDOM)
+			let { isBrBlock, isText, textNodeValue, parentNodeIsPlaceholder, anchor, currentNode, parentNode, targetDOM } = this.anchorInfo
+			// 当前节点是一个空br节点
+			if (isBrBlock && !parentNodeIsPlaceholder) {
+				parentNode.replaceChild(insertTag, parentNode.childNodes[0])
 			}
-			if (isText) {
-				let beforeTextNode = document.createTextNode(textNodeValue.slice(0, anchor))
-				let afterTextNode = document.createTextNode(textNodeValue.slice(anchor))
+			// 失去焦点前的最后一个dom节点是个占位节点
+			if (parentNodeIsPlaceholder) {
+				targetDOM.parentNode.replaceChild(insertTag, targetDOM)
+			}
+			// 当前为文字节点且父节点不是一个占位节点
+			if (isText && !parentNodeIsPlaceholder) {
+
 
 				// 为当前文本节点尾部
 				if (textNodeValue.length === anchor) {
@@ -115,14 +215,21 @@ export default createComponent({
 						parentNode.appendChild(insertTag)
 					}
 				} else {
-					parentNode.replaceChild(afterTextNode, currentNode)
-					parentNode.insertBefore(insertTag, afterTextNode)
-					parentNode.insertBefore(beforeTextNode, insertTag)
+					// 当前节点中间或是起始位
+					let beforeTextNode = document.createTextNode(textNodeValue.slice(0, anchor))
+					let afterTextNode = document.createTextNode(textNodeValue.slice(anchor))
+					try {
+						parentNode.replaceChild(afterTextNode, currentNode)
+						parentNode.insertBefore(insertTag, afterTextNode)
+						parentNode.insertBefore(beforeTextNode, insertTag)
+					} catch (e) {
+						console.error(`节点插入失败,当前节点[[${textNodeValue}]],父节点[[${parentNode}]]`);
+					}
+
 				}
 
 
 			}
-			this.setCurrentCaretPosition(insertTag, 1)
 		},
 		// 创建块
 		createBlock(name: string, attrs = {}, children?: (string | Node)[]) {
@@ -137,7 +244,7 @@ export default createComponent({
 					return node.setAttribute("style", style)
 				}
 				try {
-					node.setAttribute(k, attrs[k])
+					node.setAttribute(toKebabCase(k), attrs[k])
 				} catch { }
 			})
 			if (children) each<string | Node>(children, (item) => {
@@ -152,26 +259,23 @@ export default createComponent({
 			return node
 		},
 		// 设置当前光标锚点所在为的光标位置
-		setCurrentCaretPosition(cursor_anchor, pos = 0) {
+		setCurrentCaretPosition(cursor_anchor, pos = 0, carseNode) {
 			cursor_anchor = cursor_anchor || (document.getElementsByClassName('cursor_anchor') || [])[0]
 			if (cursor_anchor) {
-				// 保存占位
-				this.relyList.push(cursor_anchor)
-				// 多余占位剔除
-				this.lastActiveNode = cursor_anchor
 				setTimeout(() => {
 					(this.$el as HTMLElement).focus()
-					this.setCaretPosition(cursor_anchor, pos)
+					this.setCaretPosition(cursor_anchor, pos, carseNode)
 				}, 0);
 			}
+			this.getCursortPosition()
 		},
 		// 设置光标位置
-		setCaretPosition(element, pos) {
+		setCaretPosition(element, pos, carseNode) {
 			var range, selection;
 			range = document.createRange(); //创建一个选中区域
 			range.selectNodeContents(element); //选中节点的内容
 			if (element.innerHTML.length > 0) {
-				range.setStart(element.childNodes[0], pos); //设置光标起始为指定位置
+				range.setStart(carseNode || element.childNodes[0], pos); //设置光标起始为指定位置
 			}
 			range.collapse(true); //设置选中区域为一个点
 			selection = window.getSelection(); //获取当前选中区域
@@ -188,12 +292,15 @@ export default createComponent({
 					preCaretRange.selectNodeContents(range.endContainer); //设置选中区域的节点内容为当前节点
 					preCaretRange.setEnd(range.endContainer, range.endOffset); //重置选中区域的结束位置
 					caretOffset = preCaretRange.toString().length;
+				} else {
+					return console.warn("无法获取选中区");
 				}
 
 				let targetDOM = this.getTargetNode(range)
 				let isText = range.endContainer.nodeType === 3
 				let isDOM = range.endContainer.nodeType === 1
 				let isBrBlock = false
+				let parentNodeIsPlaceholder = false
 				let isOnlyOneChild = false
 				let childNodes = []
 				let parentNode = null
@@ -220,11 +327,21 @@ export default createComponent({
 
 				parentNode = currentNode.parentNode
 
+				// 当前节点为 占位节点
+				if (this.hasClass(targetDOM, 'insert-ph')) {
+					parentNodeIsPlaceholder = true
+				}
+
+				let styId = targetDOM.getAttribute("data-sty-id")
+
+				if (styId) this.debounceSyncStyleId(styId)
+
 				let anchorInfo = {
 					anchor,
 					range,
 					currentNode,
 					targetDOM,
+					targetParentNode,
 					isText,
 					isDOM,
 					isBrBlock,
@@ -232,7 +349,7 @@ export default createComponent({
 					childNodes,
 					parentNode,
 					textNodeValue,
-					targetParentNode
+					parentNodeIsPlaceholder
 				}
 
 				this.anchor = anchor
@@ -240,7 +357,7 @@ export default createComponent({
 				this.targetDOM = targetDOM
 				this.anchorInfo = anchorInfo
 
-				console.log(anchorInfo);
+				// console.log(anchorInfo);
 
 				fn(anchorInfo)
 			}, 0);
@@ -253,6 +370,7 @@ export default createComponent({
 			var range;
 			var preCaretRange;
 			sel = win.getSelection();
+
 			if (sel.rangeCount > 0) {
 				range = win.getSelection().getRangeAt(0);
 				preCaretRange = range.cloneRange();
@@ -263,7 +381,7 @@ export default createComponent({
 		// 获取目标
 		getTargetNode(range) {
 			let targetDOM
-			if (!range) return console.warn("range is invalid", range);
+			if (!range) return // console.warn("range is invalid", range);
 			let { commonAncestorContainer, startContainer, endContainer, collapsed } = range
 
 			// 对比起始下标与结尾下标是否相同
@@ -292,13 +410,45 @@ export default createComponent({
 			let { classList } = currentNode
 			// 移除激活
 			if (isDeactive) {
-				let _classList = filter<string>(classList, (name) => name !== ACTIVE_CLASS_NAME)
-				currentNode.className = _classList.join(' ')
+				this.removeClass(currentNode, ACTIVE_CLASS_NAME)
 			}
 			// 激活当前节点
 			else if (indexOf<string>(classList, ACTIVE_CLASS_NAME) < 0) {
-				currentNode.className = [...classList, ACTIVE_CLASS_NAME].join(" ")
+				this.addClass(currentNode, ACTIVE_CLASS_NAME)
 			}
-		}
+		},
+		// addClass
+		addClass(element, className) {
+			if (element && element.classList) {
+				if (this.hasClass(element, className)) return
+				element.className = [...element.classList, className].join(' ')
+			} else {
+				// console.warn("非法dom", element);
+			}
+		},
+		// addClass
+		removeClass(element, className) {
+			if (element && element.classList) {
+				let _classList = filter<string>(element.classList, (name) => name !== className)
+				element.className = _classList.join(' ')
+			} else {
+				// console.warn("非法dom", element);
+			}
+		},
+		// hasClass
+		hasClass(element, className) {
+			if (element && element.classList) {
+				let index = indexOf<string>(element.classList, className)
+				return index >= 0
+			} else {
+				// console.warn("非法dom", element);
+			}
+		},
+	},
+	mounted() {
+		this.debounceSyncStyleId = debounce((styId) => this.$emit("style", styId), 50)
+		this.setCurrentCaretPosition()
+		this.getCursortPosition()
+		this.editorContent = this.$el.innerText
 	}
 })
