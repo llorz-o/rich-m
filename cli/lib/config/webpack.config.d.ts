@@ -5,25 +5,6 @@ declare const _default: {
         inline: boolean;
         info: boolean;
         quiet: boolean;
-        noInfo: boolean;
-        overlay: boolean;
-        cached: boolean;
-        cachedAssets: boolean;
-        chunks: boolean;
-        chunkModules: boolean;
-        chunkOrigins: boolean;
-        modules: boolean;
-        colors: boolean;
-        hash: boolean;
-        version: boolean;
-        timings: boolean;
-        assets: boolean;
-        reasons: boolean;
-        children: boolean;
-        source: boolean;
-        errors: boolean;
-        errorDetails: boolean;
-        warnings: boolean;
         stats: undefined;
     };
     module: {

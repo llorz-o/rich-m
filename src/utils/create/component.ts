@@ -1,7 +1,7 @@
 import Vue, { ComponentOptions, VueConstructor } from 'vue'
 import { toPascalCase } from '../format'
 import { VNode } from 'vue/types/umd'
-import { MixinExtractSlot } from '@/src/mixins/slots'
+import { MixinExtractSlot } from '../../mixins/slots'
 import { DefaultMethods } from 'vue/types/options'
 
 interface VD<T> extends Vue, DefaultMethods<T> {

@@ -1,7 +1,7 @@
 import './index.less'
-import { createNamespace } from 'u@/create'
-import { indexOf, filter, each, toPascalCase, debounce } from '@/utils'
-import { toKebabCase } from '@/utils/format/string';
+import { createNamespace } from '../utils'
+import { indexOf, filter, each, toPascalCase, debounce } from '../utils'
+import { toKebabCase } from '../utils';
 const [createComponent, bem] = createNamespace("editor")
 /**
  * &#65279; 空占位符

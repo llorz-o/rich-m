@@ -10,6 +10,7 @@ const dev_1 = __importDefault(require("./command/dev"));
 const build_1 = __importDefault(require("./command/build"));
 const demo_1 = __importDefault(require("./command/demo"));
 const doc_1 = __importDefault(require("./command/doc"));
+const build_dev_1 = __importDefault(require("./command/build-dev"));
 program.version("0.0.1");
 program
     .command("dev")
@@ -27,4 +28,8 @@ program
     .command("doc")
     .description("构建项目文档页")
     .action(doc_1.default);
+program
+    .command("build:dev")
+    .description("打包开发页面")
+    .action(build_dev_1.default);
 program.parse(process.argv);

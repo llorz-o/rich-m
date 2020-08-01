@@ -23,7 +23,7 @@ function default_1() {
         };
         webpack_dev_server_1.default.addDevServerEntrypoints(DEMO_CONFIG, devServerOptions);
         const compiler = webpack_1.default(DEMO_CONFIG);
-        const watching = compiler.watch({}, (err, stats) => {
+        compiler.watch({}, (err, stats) => {
             console.log("change !!!!!!!!!!!!");
             if (err)
                 return console.error(err);

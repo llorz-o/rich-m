@@ -29,7 +29,7 @@ export default function() {
 
 		const compiler = Webpack(DEMO_CONFIG);
 
-		const watching = compiler.watch({}, (err, stats) => {
+		compiler.watch({}, (err, stats) => {
 			console.log("change !!!!!!!!!!!!");
 			if (err) return console.error(err);
 			buildDocFile();

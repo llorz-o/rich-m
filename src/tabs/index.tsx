@@ -1,14 +1,11 @@
 import './index.less'
-import { createNamespace } from 'u@/create'
-import { each } from 'u@/index'
+import { each, createNamespace } from '../utils';
 import { scrollLeftTo } from './utils'
-
 import { MixinParent } from '../mixins/relation'
-
-const [createComponent, bem] = createNamespace('tabs')
-
 import Title from './title'
 import Content, { IContent } from './content'
+
+const [createComponent, bem] = createNamespace('tabs')
 
 export default createComponent({
 	props: {

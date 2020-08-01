@@ -1,0 +1,14 @@
+export * from "./constant";
+export * from "./fs-supplement";
+export declare const DEMO_DIR_MATCH: RegExp;
+export declare const TEST_DIR_MATCH: RegExp;
+export declare const JS_FILE_MATCH: RegExp;
+export declare const STYLE_FILE_MATCH: RegExp;
+export declare const OTHER_FILE_MATCH: RegExp;
+export declare function isDemo(filePath: string): boolean;
+export declare function isTest(filePath: string): boolean;
+export declare function isJs(filePath: string): boolean;
+export declare function isStyle(filePath: string): boolean;
+export declare function isOther(filePath: string): boolean;
+export declare const toPascalCase: (str: string) => string;
+export declare const toKebabCase: (str: string) => string;

@@ -1,6 +1,6 @@
 import './index.less'
-import { createNamespace } from 'u@/create'
 import { MixinChildren } from '../mixins/relation'
+import { createNamespace } from '../utils'
 
 const [createComponent, bem] = createNamespace('tab')
 

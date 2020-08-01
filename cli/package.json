@@ -1,42 +1,48 @@
 {
-  "name": "cli",
-  "version": "1.0.0",
-  "description": "",
-  "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
-  "bin": {
-    "rich": "./lib/index.js"
-  },
-  "scripts": {
-    "dev": "tsc --watch"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@babel/core": "^7.10.4",
-    "@babel/plugin-syntax-jsx": "^7.10.4",
-    "@types/webpack-dev-server": "^3.11.0",
-    "babel-loader": "^8.1.0",
-    "copy-webpack-plugin": "^6.0.3",
-    "css-loader": "^3.6.0",
-    "friendly-errors-webpack-plugin": "^1.7.0",
-    "highlight.js": "^10.1.1",
-    "html-webpack-plugin": "^4.3.0",
-    "less": "^3.11.3",
-    "less-loader": "^6.2.0",
-    "marked": "^1.1.1",
-    "node-notifier": "^7.0.1",
-    "shelljs": "^0.8.4",
-    "ts-loader": "^8.0.0",
-    "ts-node": "^8.10.2",
-    "typescript": "^3.9.6",
-    "vue-loader": "^15.9.3",
-    "vue-style-loader": "^4.1.2",
-    "vue-template-compiler": "^2.6.11",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0",
-    "webpack-merge": "^5.0.9"
-  }
+	"name": "cli",
+	"version": "1.0.0",
+	"description": "",
+	"main": "lib/index.js",
+	"typings": "lib/index.d.ts",
+	"bin": {
+		"rich": "./lib/index.js"
+	},
+	"scripts": {
+		"dev": "tsc --watch"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@types/fs-extra": "^9.0.1",
+		"@types/webpack-dev-server": "^3.11.0",
+		"babel-loader": "^8.1.0",
+		"copy-webpack-plugin": "^6.0.3",
+		"css-loader": "^3.6.0",
+		"friendly-errors-webpack-plugin": "^1.7.0",
+		"fs-extra": "^9.0.1",
+		"highlight.js": "^10.1.1",
+		"html-webpack-plugin": "^4.3.0",
+		"less": "^3.11.3",
+		"less-loader": "^6.2.0",
+		"marked": "^1.1.1",
+		"node-notifier": "^7.0.1",
+		"shelljs": "^0.8.4",
+		"ts-loader": "^8.0.0",
+		"ts-node": "^8.10.2",
+		"typescript": "^3.9.6",
+		"vue-loader": "^15.9.3",
+		"vue-style-loader": "^4.1.2",
+		"vue-template-compiler": "^2.6.11",
+		"webpack": "^4.43.0",
+		"webpack-cli": "^3.3.12",
+		"webpack-dev-server": "^3.11.0",
+		"webpack-merge": "^5.0.9",
+		"@babel/plugin-syntax-jsx": "^7.10.4",
+		"@babel/core": "^7.11.0",
+		"@babel/plugin-transform-runtime": "^7.11.0",
+		"@babel/preset-env": "^7.11.0",
+		"@babel/preset-typescript": "^7.10.4",
+		"@vue/babel-preset-jsx": "^1.1.2"
+	}
 }

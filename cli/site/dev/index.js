@@ -2,7 +2,9 @@ import Vue from "vue"
 import VueRouter from 'vue-router'
 import '../index'
 import App from './App.vue'
+import Rich from './lib/es6'
 
+Vue.use(Rich)
 Vue.use(VueRouter)
 
 import home from './views/home.vue'
