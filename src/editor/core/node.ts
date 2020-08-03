@@ -3,7 +3,7 @@ export interface INode {
 	isElement(node: Node): boolean;
 }
 
-export const INode = {
+export const INode: INode = {
 	isTextNode(node: Node): boolean {
 		return node && node.nodeType === 3;
 	},
