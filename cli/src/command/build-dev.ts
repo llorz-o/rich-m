@@ -12,6 +12,10 @@ export default function() {
 			merge(BaseConf as Webpack.Configuration, {
 				mode: "production",
 				entry: join(config.CLI_SITE, "dev/index.js"),
+				output: {
+					filename: "bundle.js",
+					path: join(config.ROOT, "docs/dev")
+				},
 				plugins: [
 					new HtmlWebpackPlugin({
 						template: join(config.CLI_SITE, "dev/index.html")

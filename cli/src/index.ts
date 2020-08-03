@@ -9,6 +9,7 @@ import build from "./command/build";
 import demo from "./command/demo";
 import doc from "./command/doc";
 import build_dev from "./command/build-dev";
+import build_doc from "./command/build-doc";
 
 program.version("0.0.1");
 
@@ -34,5 +35,10 @@ program
 	.command("build:dev")
 	.description("打包开发页面")
 	.action(build_dev);
+
+program
+	.command("build:doc")
+	.description("打包文档页面")
+	.action(build_doc);
 
 program.parse(process.argv);

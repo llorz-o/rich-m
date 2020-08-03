@@ -13,7 +13,15 @@ export default {
 	},
 	computed: {
 		iframeSrc() {
-			return this.origin + "/#" + this.$route.fullPath;
+			if (origin.indexOf("llorz")) {
+				return (
+					"https://llorz-o.github.io/rich-m/demo" +
+					"/#" +
+					this.$route.fullPath
+				);
+			} else {
+				return this.origin + "/#" + this.$route.fullPath;
+			}
 		}
 	}
 };
