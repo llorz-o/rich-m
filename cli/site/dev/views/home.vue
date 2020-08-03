@@ -1,72 +1,120 @@
 <template>
-	<div class="home">
-		<button
-			v-for="(item, index) in styleOptions"
-			:key="index"
-			@click="() => insertStyleBlock(item)"
-			:class="activeSty === item.styleId ? 'active' : ''"
-		>
-			{{ item.styleId }}
-		</button>
-		<button @click="insertImage">insert image</button>
-		<editor ref="editor" @style="currentSty" />
-	</div>
+  <div class="home">
+    <div
+      class="editor"
+      contenteditable="true"
+      @change="onChange"
+      @input="onInput"
+      @keydown="onKeydown"
+      @keypress="onKeypress"
+      @keyup="onKeyup"
+    >
+      12
+    </div>
+    <div>
+      <table>
+        <tr>
+          <th>charCode</th>
+          <th>code</th>
+          <th>key</th>
+          <th>keyCode</th>
+          <th>type</th>
+          <th>which</th>
+        </tr>
+        <tr v-for="(item, index) in list" :key="index">
+          <td>{{ item.charCode }}</td>
+          <td>{{ item.code }}</td>
+          <td>{{ item.key }}</td>
+          <td>{{ item.keyCode }}</td>
+          <td>{{ item.type }}</td>
+          <td>{{ item.which }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
 </template>
 
 <script>
-/* <img class={["img"]} src="http://www.divcss5.com/uploads/allimg/130204/1_130204153950_1.png" alt="" /> */
 export default {
-	data() {
-		return {
-			activeSty: "__black",
-			styleOptions: [
-				{
-					styleId: "red",
-					style: {
-						color: "red"
-					}
-				},
-				{
-					styleId: "blue",
-					style: {
-						color: "blue"
-					}
-				},
-				{
-					styleId: "green",
-					style: {
-						color: "green"
-					}
-				}
-			]
-		};
-	},
-	methods: {
-		insertStyleBlock({ styleId, style }) {
-			this.$refs.editor.registerColor(styleId, style);
-		},
-		insertImage() {
-			this.$refs.editor.insertImage(
-				"http://www.divcss5.com/uploads/allimg/130204/1_130204153950_1.png"
-			);
-		},
-		currentSty(styleId) {
-			this.activeSty = styleId;
-		}
-	}
+  data() {
+    return {
+      list: [],
+    };
+  },
+  methods: {
+    onKeydown(e) {
+      console.log("keydown", e);
+      let { charCode, code, key, keyCode, type, which } = e;
+      this.list.unshift({
+        charCode,
+        code,
+        key,
+        keyCode,
+        type,
+        which,
+      });
+    },
+    onKeypress(e) {
+      console.log("keypress", e);
+      let { charCode, code, key, keyCode, type, which } = e;
+      this.list.unshift({
+        charCode,
+        code,
+        key,
+        keyCode,
+        type,
+        which,
+      });
+    },
+    onKeyup(e) {
+      console.log("keyup", e);
+      let { charCode, code, key, keyCode, type, which } = e;
+      this.list.unshift({
+        charCode,
+        code,
+        key,
+        keyCode,
+        type,
+        which,
+      });
+    },
+    onInput(e) {
+      console.log("input", e);
+    },
+    onChange(e) {
+      console.log("change", e);
+    },
+  },
 };
 </script>
 
 <style lang="less">
 .home {
-	button {
-		height: 30px;
-		line-height: 30px;
-		min-width: 60px;
-		margin: 0 5px;
-		&.active {
-			outline: 3px solid red;
-		}
-	}
+  .editor {
+    width: 100vw;
+    height: 200px;
+    border: 2px solid black;
+  }
+  button {
+    height: 30px;
+    line-height: 30px;
+    min-width: 60px;
+    margin: 0 5px;
+    &.active {
+      outline: 3px solid red;
+    }
+  }
+  table {
+    width: 100vw;
+    tr,
+    th {
+      width: 100vw;
+      td {
+        height: 20px;
+        line-height: 20px;
+        text-align: center;
+      }
+    }
+  }
 }
 </style>
