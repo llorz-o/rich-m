@@ -5,6 +5,7 @@ import { toKebabCase } from '../utils';
 import { Editor } from './core/editor';
 import { delay } from './utils';
 import { Point } from './core/point';
+import { Operate } from './core';
 const [createComponent, bem] = createNamespace("editor")
 /**
  * &#65279; 空占位符
@@ -32,13 +33,23 @@ export default createComponent({
 			onKeydown={this.onKeydown}
 			onKeyup={this.onKeyup}
 		>
-			<p>
-				<span>
-					<span>
-						<img src="http://www.divcss5.com/uploads/allimg/130204/1_130204153950_1.png" />
-						{/* &#65279; */}
+			<p data-node="element">
+				<span data-node="text">
+					<span data-length="0">
+						&#65279;
+						<br />
 					</span>
 				</span>
+				{/* <span data-node="text">
+					<span data-string="true">
+						222
+					</span>
+				</span>
+				<span data-node="text">
+					<span data-string="true">
+						111
+					</span>
+				</span> */}
 			</p>
 		</div>
 	},
@@ -75,6 +86,8 @@ export default createComponent({
 		onInput(e) {
 			// e.inputType = insertParagraph(回车) | insertText | deleteContentBackward(删除)
 			console.log('input event', e);
+			Point.getCursor(this.$el)
+			Point.point()
 			// this.getCursortPosition(({
 			// 	isText,
 			// 	parentNode,
@@ -91,8 +104,7 @@ export default createComponent({
 			delay(() => {
 				Point.getCursor(this.$el)
 				Point.point()
-				console.log(Point)
-			})
+			}, 0)
 
 			// setTimeout(() => this.getCursortPosition(), 50);
 
@@ -124,6 +136,7 @@ export default createComponent({
 
 		},
 		onKeydown(e) {
+			Operate.disposeKeydown(e, this.$el)
 			// this.getCursortPosition()
 			// if ((this.$el as HTMLElement).innerText.indexOf(this.editorContent) < 0) {
 			// 	let lastColumn = this.createBlock('span', {
@@ -143,6 +156,10 @@ export default createComponent({
 		},
 		onKeyup(e) {
 			console.log("keyup event", e);
+			delay(() => {
+				Point.getCursor(this.$el)
+				Point.point()
+			}, 0)
 			// 当前节点为span 节点且子节点只有 br
 		},
 		// // insertimage
