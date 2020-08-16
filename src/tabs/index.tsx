@@ -175,11 +175,10 @@ export default createComponent({
 				swipeThreshold={this.swipeThreshold}
 				tabsWidth={this.tabsWidth}
 				scopedSlots={{
-					['tab-left']: () => vnode.$slots['tab-left'],
-					['tab-right']: () => vnode.$slots['tab-right'],
+					['title']: () => vnode.$slots['title']
 				}}
 				onClick={() => this.onClickTitle(index)}>
-				{vnode.$slots['title'] || vnode.title}
+				{vnode.title}
 			</Title>);
 		})
 

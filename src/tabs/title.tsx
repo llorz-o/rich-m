@@ -42,11 +42,7 @@ export default createComponent({
 				active: this.isActive && !this.isDisable,
 				disable: this.isDisable
 			})}>
-			{this.slots('tab-left')}
-			<div class={bem('text')}>
-				{this.slots()}
-			</div>
-			{this.slots('tab-right')}
+			{this.slots("title") || <div class={bem('text')}>{this.slots()}</div>}
 		</div>)
 	}
 })

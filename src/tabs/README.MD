@@ -94,7 +94,7 @@ Vue.component(Tabs.name, Tabs);
 
 ### 插槽
 
-允许你使用丰富的插槽来定制组件
+提供少量插槽
 
 ```vue
 <tabs content-height="300px">
@@ -111,13 +111,7 @@ Vue.component(Tabs.name, Tabs);
         <template #title>
 			title 插槽
         </template>
-		<template v-if="showTabSlot" #tab-left>
-			<div>tab-left</div>
-		</template>
-		<template #tab-right>
-			<div>tab-right</div>
-		</template>
-		<Fill @click="showTabSlot = !showTabSlot">3</Fill>
+		<Fill >3</Fill>
 	</tab>
 </tabs>
 ```
@@ -131,10 +125,10 @@ Vue.component(Tabs.name, Tabs);
 | v-model         | 绑定当前选中标签的下标       | Number         | none          |
 | animated        | 开启切换动画                 | Boolean        | false         |
 | swiper          | 开启手势滑动切换             | Boolean        | false         |
-| sticky          | 开启粘性title                | Boolean        | false         |
+| sticky          | 开启粘性 title               | Boolean        | false         |
 | scroll          | 开启上下滚动                 | Boolean        | false         |
 | content-height  | 设置内容区高度 ["200px",200] | String\|Number | none          |
-| swipe-threshold | 超过该值将开启title滚动      | Number         | 4             |
+| swipe-threshold | 超过该值将开启 title 滚动    | Number         | 4             |
 | type            | 样式,["card"]                | String         | default       |
 
 ### Tab Props
@@ -144,6 +138,3 @@ Vue.component(Tabs.name, Tabs);
 | title-style | 标题栏样式             | String  | none          |
 | disable     | 关闭该标签的切换与点击 | Boolean | false         |
 | title       | 该标签的标题           | String  | ""            |
-
-
-
