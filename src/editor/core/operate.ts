@@ -28,7 +28,7 @@ export interface Operate {
 	disposeKeydown(this: Operate, e: KeyboardEvent, $editor: Element): void;
 	isEditorLast(this: Operate, $editor: Element): boolean;
 	isLastNode(this: Operate, target: Element): boolean;
-	isCurrentLineLastBlock(this: Operate, target: Element): Node | boolean;
+	// isCurrentLineLastBlock(this: Operate, target: Element): Node | boolean;
 	isPLNode(this: Operate, node: Element): boolean;
 	isTextPLNode(this: Operate, node: Element): boolean;
 	isBrPLNode(this: Operate, node: Element): boolean;
@@ -62,65 +62,14 @@ export const Operate: Operate = {
 	 */
 	disposeKeydown(e: KeyboardEvent, $editor: Element): void {
 		let { charCode, key, keyCode, which } = e;
-
+		Point.getCursor($editor);
+		Point.point();
 		if (this.isDeleteKey(key, keyCode, which)) {
-			// debugger;
 			if (this.isEditorLast($editor)) {
 				e.preventDefault();
 				e.stopPropagation();
-				return;
-			} else {
-				// 不是最后一行
-				// debugger;
-				// 当前为当前行最后一个子节点 且不为
-				let lastNode = this.isCurrentLineLastBlock(
-					Point.range.endContainer as Element
-				);
-				if (lastNode) {
-					// 当前为最后一个节点且为空占位节点,直接删除整行
-					if (
-						(lastNode as Node).childNodes.length === 2 &&
-						this.isTextAndBrPLNode(lastNode as Element)
-					) {
-						let currentLine = INode.backTracking(
-							lastNode as Node,
-							node => node.nodeName === "P"
-						);
-
-						if (currentLine) {
-							let previousSibling = (currentLine as Element)
-								.previousElementSibling;
-
-							($editor as Element).removeChild(
-								currentLine as Node
-							);
-
-							if (previousSibling) {
-								Point.point(0, previousSibling as Node);
-							}
-						}
-						e.preventDefault();
-						e.stopPropagation();
-					}
-					// 当前为最后节点且子节点为1
-					if ((lastNode as Node).childNodes.length === 1) {
-						let childNode = (lastNode as Node).childNodes[0];
-
-						if (
-							(INode.isTextNode(childNode) &&
-								childNode.nodeValue.length === 1) ||
-							!INode.isTextNode(childNode)
-						) {
-							this.changeNodeStateToEmpty(
-								Point.range.endContainer as Element
-							);
-							e.preventDefault();
-							e.stopPropagation();
-							return;
-						}
-					}
-				}
 			}
+			return;
 		}
 		if (this.isEnterKey(key, keyCode, which, charCode)) {
 			delay(() => {
@@ -148,13 +97,12 @@ export const Operate: Operate = {
 			return;
 		}
 
-		delay(() => {
-			Point.getCursor($editor);
-			Point.point();
-			// if (this.isEditorLast($editor))
-			this.changeEmptyNodeState(Point.range.endContainer as Element);
-			Point.point(1, Point.range.endContainer);
-		}, 0);
+		// 当前为编辑
+		INode.backTracking(Point.range.endContainer, node => {
+			// todo end point
+			// return node.nodeName === 'SPAN' && (node as Element).getAttribute()
+			return false;
+		});
 	},
 	/**
 	 * 判断当前编辑器是否最后一行
@@ -187,26 +135,26 @@ export const Operate: Operate = {
 	 * 当前是否为这一行的最后一个节点
 	 * @param target
 	 */
-	isCurrentLineLastBlock(this: Operate, target: Element): Node | boolean {
-		let currentLine = INode.backTracking(
-			target as Node,
-			node => node.nodeName === "P"
-		);
-		// 当前的行节点为哪一个
-		if (currentLine) {
-			let lastBlock = INode.depTracking(currentLine as Node, node => {
-				return (
-					node.nodeType === 1 &&
-					node.nodeName === "SPAN" &&
-					node.childNodes &&
-					node.childNodes[0].nodeType !== 1
-				);
-			});
+	// isCurrentLineLastBlock(this: Operate, target: Element): Node | boolean {
+	// 	let currentLine = INode.backTracking(
+	// 		target as Node,
+	// 		node => node.nodeName === "P"
+	// 	);
+	// 	// 当前的行节点为哪一个
+	// 	if (currentLine) {
+	// 		let lastBlock = INode.depTracking(currentLine as Node, node => {
+	// 			return (
+	// 				node.nodeType === 1 &&
+	// 				node.nodeName === "SPAN" &&
+	// 				node.childNodes &&
+	// 				node.childNodes[0].nodeType !== 1
+	// 			);
+	// 		});
 
-			return lastBlock;
-		}
-		return false;
-	},
+	// 		return lastBlock;
+	// 	}
+	// 	return false;
+	// },
 
 	/**
 	 * 判断当前节点是否为空占位节点

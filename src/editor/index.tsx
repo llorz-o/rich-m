@@ -35,7 +35,7 @@ export default createComponent({
 		>
 			<p data-node="element">
 				<span data-node="text">
-					<span data-length="0">
+					<span data-string="true" data-length="0">
 						&#65279;
 						<br />
 					</span>
