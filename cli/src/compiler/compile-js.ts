@@ -6,8 +6,8 @@ export function compilerJs(filePath: string) {
 	transformFile(
 		filePath,
 		{
-			configFile: false,
-			babelrc: false,
+			configFile: false, // 使用配置文件?
+			babelrc: false, // 使用 babelrc 文件?
 			babelrcRoots: false,
 			presets: [
 				[

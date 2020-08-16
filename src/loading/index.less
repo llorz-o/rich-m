@@ -1,0 +1,29 @@
+@import "../sty/var.less";
+.x-loading {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	&__icon {
+		display: block;
+		width: 15px;
+		height: 15px;
+		border-width: 2px;
+		border-top-color: @loading-color;
+		border-right-color: @loading-color;
+		border-bottom-color: @loading-color;
+		border-left-color: transparent;
+		border-style: solid;
+		border-radius: 50%;
+		z-index: 10;
+		animation-name: ever;
+		animation-duration: 300ms;
+		animation-iteration-count: infinite;
+		animation-timing-function: linear;
+
+		@keyframes ever {
+			100% {
+				transform: rotateZ(360deg);
+			}
+		}
+	}
+}

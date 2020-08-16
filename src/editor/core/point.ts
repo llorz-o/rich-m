@@ -7,7 +7,7 @@ interface Point {
 	offset?: number;
 
 	getCursor(this: Point, element: Element | Window): void;
-	point(this: Point, pos?: number): void;
+	point(this: Point, pos?: number, targetNode?: Node): void;
 }
 
 export const Point: Point = {
@@ -35,7 +35,7 @@ export const Point: Point = {
 		}
 	},
 	// 获取当前光标点,或设置当前光标点
-	point(pos?: number) {
+	point(pos?: number, targetNode?: Node) {
 		let { range, preCaretRange } = this;
 
 		if (pos === undefined) {
@@ -56,6 +56,18 @@ export const Point: Point = {
 				this.offset = range.endOffset;
 			}
 		} else {
+			// 设置当前光标位置为目标位置
+			let range, selection;
+			range = document.createRange(); //创建一个选中区域
+			range.selectNodeContents(targetNode.parentNode); //选中节点的内容
+			//设置光标起始为指定位置
+			if ((targetNode.parentNode as Element).innerHTML.length > 0)
+				range.setStart(targetNode, pos);
+
+			range.collapse(true); //设置选中区域为一个点
+			selection = window.getSelection(); //获取当前选中区域
+			selection.removeAllRanges(); //移出所有的选中范围
+			selection.addRange(range); //添加新建的范围
 		}
 	}
 };

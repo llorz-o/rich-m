@@ -1,16 +1,16 @@
 <template>
-	<div>
-		page2
-	</div>
+  <div>
+    <editor />
+  </div>
 </template>
 
 <script>
 export default {
-	components: {},
-	data() {
-		return {
-			showPop: false
-		};
-	}
+  components: {},
+  data() {
+    return {
+      showPop: false,
+    };
+  },
 };
 </script>

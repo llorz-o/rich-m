@@ -1,5 +1,3 @@
-interface Editor {
+interface Editor {}
 
-}
-
-export const Editor = {};
+export const Editor: Editor = {};

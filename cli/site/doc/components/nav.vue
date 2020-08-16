@@ -14,6 +14,7 @@
 	color: #ffffff;
 	padding-left: 300px;
 	display: flex;
+	z-index: 10;
 	.logo {
 		line-height: 50px;
 		text-transform: uppercase;

@@ -33,3 +33,12 @@ export function indexOf<T>(arr: CommonArray<T>, value: T): number {
 	});
 	return _index;
 }
+
+export function map<T>(
+	arr: CommonArray<T>,
+	cb: (item: T, index: number, self: CommonArray<T>) => any
+): T[] {
+	let result: any[] = [];
+	each<T>(arr, (item, index, self) => result.push(cb(item, index, self)));
+	return result;
+}
