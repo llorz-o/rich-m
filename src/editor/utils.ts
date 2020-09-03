@@ -1,3 +1,5 @@
-export function delay(fn: Function, delay: number = 300): void {
-	setTimeout(fn, delay);
+/** @format */
+
+export function delay(fn: () => any, delay = 300): void {
+    setTimeout(fn, delay)
 }

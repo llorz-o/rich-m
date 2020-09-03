@@ -68,7 +68,7 @@ export default createComponent({
 	},
 	computed: {
 		effectCurrentIndexs() {
-			let effectIndex = []
+			const effectIndex = []
 			each<any>(this.children, (vnode, index) => {
 				if (!vnode.disable) {
 					effectIndex.push(index)
@@ -99,8 +99,8 @@ export default createComponent({
 		},
 		// 手势滑动
 		onSwiper(offset) {
-			let _currentIndex = this.currentIndex
-			let effectCurrentIndexsLen = this.effectCurrentIndexs.length
+			const _currentIndex = this.currentIndex
+			const effectCurrentIndexsLen = this.effectCurrentIndexs.length
 			let effectIndex = this.effectCurrentIndexs.indexOf(_currentIndex)
 
 			effectIndex += offset
@@ -109,7 +109,7 @@ export default createComponent({
 
 			effectIndex = this.effectCurrentIndexs[effectIndex]
 
-			if (effectIndex as Number) {
+			if (effectIndex as number) {
 				this.currentIndex = effectIndex
 			} else {
 				this.currentIndex = 0
@@ -134,12 +134,12 @@ export default createComponent({
 			}
 		},
 		// 获取所有面板高度
-		getPanelsHeight(scrollTop: number = 0) {
-			let panelsHeight = []
+		getPanelsHeight(scrollTop = 0) {
+			const panelsHeight = []
 			let scrollHeight = 0
 			let _currentIndex = null
 			each<Vue>(this.children, (tab, index) => {
-				let tabClientHeight = tab.$el.clientHeight
+				const tabClientHeight = tab.$el.clientHeight
 				scrollHeight += tabClientHeight
 				panelsHeight.push(tabClientHeight)
 				if (scrollHeight > scrollTop && _currentIndex == null) _currentIndex = index
@@ -149,7 +149,7 @@ export default createComponent({
 		},
 		// 内容滚动事件处理
 		onDebounceScroll(scrollTop) {
-			let _currentIndex = this.getPanelsHeight(scrollTop)
+			const _currentIndex = this.getPanelsHeight(scrollTop)
 			if (this.scrollLock) return this.scrollLock = false
 			this.scrollTitleTo(Number(_currentIndex || '0'))
 		},

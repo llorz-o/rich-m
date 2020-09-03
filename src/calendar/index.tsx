@@ -3,7 +3,7 @@ import Hammer from 'hammerjs'
 import { createNamespace, formatTime } from "../utils";
 import { getMonthDays } from "./utils";
 
-let [createComponent, bem] = createNamespace("calendar")
+const [createComponent, bem] = createNamespace("calendar")
 
 import Content from './content'
 import Loading from '../loading/index'
@@ -78,7 +78,7 @@ export default createComponent({
 		const PanelList = []
 		this.indexList.forEach(key => {
 			const monthInfo = this.Days[key]
-			let { year, month } = monthInfo
+			const { year, month } = monthInfo
 			const days = monthInfo ? monthInfo.days : []
 
 			const Title = this.slots("title", {
@@ -102,13 +102,13 @@ export default createComponent({
 		})
 
 		let Mask
-		let LoadingTpl = this.isFaild ?
+		const LoadingTpl = this.isFaild ?
 			<div class={bem("fail-win")} onClick={this.getCalendarData}>
 				<div class={bem("fail-icon")}></div>
 				<div class={bem("fail-tip")}>{this.failTip}</div>
 			</div> :
 			<Loading size={20} />
-		let ReqstateSlot = this.slots("reqstate", {
+		const ReqstateSlot = this.slots("reqstate", {
 			isFaild: this.isFaild
 		})
 
@@ -128,8 +128,8 @@ export default createComponent({
 	methods: {
 		setMonthDaysByMonthOffset(offset) {
 			if (this.currentTime) {
-				let { year, month, day } = this.currentTime
-				let { year: _year, month: _month, day: _day, putTime } = formatTime(year, month + offset, day)
+				const { year, month, day } = this.currentTime
+				const { year: _year, month: _month, day: _day, putTime } = formatTime(year, month + offset, day)
 				return {
 					days: getMonthDays(new Date(_year, _month, _day), this.firstDayOfWeek),
 					month: _month,
@@ -139,8 +139,8 @@ export default createComponent({
 			}
 		},
 		setMonth(monthOffset) {
-			let lastIndex = monthOffset - 1
-			let nextIndex = monthOffset + 1
+			const lastIndex = monthOffset - 1
+			const nextIndex = monthOffset + 1
 			if (this.Days[lastIndex] === undefined) {
 				this.Days[lastIndex] = this.setMonthDaysByMonthOffset(lastIndex)
 				this.indexList.unshift(lastIndex)
@@ -153,7 +153,7 @@ export default createComponent({
 		async getCalendarData() {
 			this.isFaild = false
 			this.isMask = true
-			let flag = await this.getData(this.currentYear, this.currentMonth)
+			const flag = await this.getData(this.currentYear, this.currentMonth)
 			this.isMask = !flag
 			// 数据请求失败
 			this.isFaild = !flag
@@ -161,9 +161,9 @@ export default createComponent({
 	},
 	created() {
 		this.currentTime = formatTime(new Date())
-		let lastMonthDays = this.setMonthDaysByMonthOffset(-1)
-		let currentMonthDays = this.setMonthDaysByMonthOffset(0)
-		let nextMonthDasy = this.setMonthDaysByMonthOffset(1)
+		const lastMonthDays = this.setMonthDaysByMonthOffset(-1)
+		const currentMonthDays = this.setMonthDaysByMonthOffset(0)
+		const nextMonthDasy = this.setMonthDaysByMonthOffset(1)
 		this.Days[-1] = lastMonthDays
 		this.Days[0] = currentMonthDays
 		this.Days[1] = nextMonthDasy
@@ -171,7 +171,7 @@ export default createComponent({
 	},
 	mounted() {
 		this.clientHeight = this.$el.clientHeight
-		let calendarContrl = new Hammer(this.$el)
+		const calendarContrl = new Hammer(this.$el)
 
 		calendarContrl.get("pan").set({
 			direction: Hammer.DIRECTION_VERTICAL

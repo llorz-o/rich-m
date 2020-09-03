@@ -1,6 +1,6 @@
 import './index.less';
 import { createNamespace, map } from "../utils";
-let [createComponent, bem] = createNamespace("calendar")
+const [createComponent, bem] = createNamespace("calendar")
 
 export default createComponent({
 	props: {
@@ -12,12 +12,10 @@ export default createComponent({
 	},
 	render(h) {
 		return <div class={bem("panel-content")}>
-			{map<{ year, month, day }>(this.days, day => {
-				return this.slots("default", {
-					...day,
-					currentMonth: this.currentMonth
-				})
-					|| <div class={bem("day", { "to-month": day.month + 1 === Number(this.currentMonth) })}>
+			{map<{ year, month, day }, Vue>(this.days, day => {
+				return this.slots("default", { ...day, currentMonth: this.currentMonth })
+					||
+					<div class={bem("day", { "to-month": day.month + 1 === Number(this.currentMonth) })}>
 						{day.day}
 					</div>
 			})}

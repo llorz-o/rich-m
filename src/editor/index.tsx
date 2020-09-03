@@ -15,7 +15,7 @@ const [createComponent, bem] = createNamespace("editor")
 const HAS_PL = /\ufeff/g;
 const PL = /^\ufeff$/; // 匹配空占位
 const ALL_PL = /^(\ufeff)+$/ // 匹配全部
-const ACTIVE_CLASS_NAME: string = "cursor_anchor"
+const ACTIVE_CLASS_NAME = "cursor_anchor"
 
 export default createComponent({
 	render(h) {

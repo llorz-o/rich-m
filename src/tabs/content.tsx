@@ -69,7 +69,7 @@ export default createComponent({
 	methods: {
 		// 左右滑动
 		horizontalSwiper() {
-			let contentContrl = new Hammer(this.$el)
+			const contentContrl = new Hammer(this.$el)
 
 			this.contentWidth = this.$el.clientWidth
 

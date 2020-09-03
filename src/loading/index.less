@@ -3,11 +3,14 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	&__text {
+		margin-right: 5px;
+	}
 	&__icon {
 		&--circle {
 			display: block;
-			width: 15px;
-			height: 15px;
+			width: 16px;
+			height: 16px;
 			border-width: 2px;
 			border-top-color: @loading-color;
 			border-right-color: @loading-color;
@@ -22,8 +25,11 @@
 			animation-timing-function: linear;
 
 			@keyframes ever {
-				100% {
-					transform: rotateZ(360deg);
+				0% {
+					transform: rotate(0deg);
+				}
+				to {
+					transform: rotate(360deg);
 				}
 			}
 		}
