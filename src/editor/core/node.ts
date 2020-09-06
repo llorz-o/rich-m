@@ -1,24 +1,63 @@
 /** @format */
 
 import {ID_SELECTOR_MATCH, CLASS_SELECTOR_MATCH} from './constant'
-import {each} from '@/src/utils'
+import {each, type, toKebabCase} from '@/src/utils'
 
+export type Attributes = Record<string, string | null | number | boolean>
 export interface INode {
+    prev(target: Node): Node | null
+    next(target: Node): Node | null
+    remove(target: Node): void
+    insertBefore(this: INode, target: Node, newNode: Node): void
+    insertAfter(this: INode, target: Node, newNode: Node): void
     isTextNode(node: Node): boolean
     isElement(node: Node): boolean
     insertInTextNode(this: INode, target: Node, insertNode: Node, pos: number): void
-    insertInNode(this: INode, target: Node, insertNode: Node, pos: number): void
+    insertInNode(this: INode, target: Node, insertNode: Node, pos?: number): void
     isBefore(this: INode, target: Node): boolean
     isAfter(this: INode, target: Node): boolean
     backTracking(this: INode, target: Node, fn: (node: Node) => boolean): Node | boolean
-    depTracking(this: INode, target: Node, fn: (node: Node) => boolean): Node | boolean
-    query(selector: string): Node[]
+    depTracking(this: INode, target: Node, fn: (node: Node) => boolean): Node | false
+    depLast(this: INode, target: Node, fn: (node: Node, index?: number) => boolean): Node | boolean
+    query(selector: string): Element[]
+    attr(this: INode, target: Element, attributes: Attributes | string): string | void
+
+    c(name: string, attrs?: Attributes, children?: (string | Node)[]): Node
+    cText(text: string): Node
 }
 
 export const INode: INode = {
+    prev(target: Node): Node | null {
+        return target.previousSibling
+    },
+    next(target: Node): Node | null {
+        return target.nextSibling
+    },
+    remove(target: Node): void {
+        target.parentNode && target.parentNode.removeChild(target)
+    },
+    insertBefore(target: Node, newNode: Node): void {
+        target.parentNode.insertBefore(newNode, target)
+    },
+    insertAfter(target: Node, newNode: Node): void {
+        const next = this.next(target)
+        if (next) {
+            target.parentNode.insertBefore(newNode, next)
+        } else {
+            target.parentNode.appendChild(newNode)
+        }
+    },
+    /**
+     * @description 是否为文本节点
+     * @param node
+     */
     isTextNode(node: Node): boolean {
         return node && node.nodeType === 3
     },
+    /**
+     * @description 是否为元素节点
+     * @param node
+     */
     isElement(node: Node): boolean {
         return node && node.nodeType === 1
     },
@@ -29,12 +68,9 @@ export const INode: INode = {
      * @param insertNode
      * @param pos
      */
-    insertInNode(target: Node, insertNode: Node, pos: number): void {
+    insertInNode(target: Node, insertNode: Node, pos = 0): void {
         const childNodes = target.childNodes
-
-        if (!childNodes[pos]) return console.error('当前元素不存在下标:', pos, target)
-
-        if (pos === childNodes.length) {
+        if (pos === childNodes.length || childNodes[pos] === undefined) {
             target.appendChild(insertNode)
         } else {
             target.insertBefore(insertNode, childNodes[pos])
@@ -62,8 +98,8 @@ export const INode: INode = {
      */
     isBefore(this: INode, target: Node): boolean {
         const parentNode = target.parentNode
-        const parentNodeChildNodes = parentNode.childNodes
-        return parentNodeChildNodes[0] === target
+        const parentNodeChildNodes = parentNode && parentNode.childNodes
+        return parentNodeChildNodes && parentNodeChildNodes[0] === target
     },
     /**
      * 当前节点是否为最后节点
@@ -72,8 +108,8 @@ export const INode: INode = {
      */
     isAfter(this: INode, target: Node): boolean {
         const parentNode = target.parentNode
-        const parentNodeChildNodes = parentNode.childNodes
-        return parentNodeChildNodes[parentNodeChildNodes.length - 1] === target
+        const parentNodeChildNodes = parentNode && parentNode.childNodes
+        return parentNodeChildNodes && parentNodeChildNodes[parentNodeChildNodes.length - 1] === target
     },
     /**
      * 回溯父节点
@@ -98,7 +134,7 @@ export const INode: INode = {
      * @param target
      * @param fn
      */
-    depTracking(target: Node, fn: (node: Node) => boolean): Node | boolean {
+    depTracking(target: Node, fn: (node: Node) => boolean): Node | false {
         if (!target || !target.childNodes) return false
         const childNodes = target.childNodes
         const firstNode = childNodes[0]
@@ -113,10 +149,31 @@ export const INode: INode = {
         }
     },
     /**
+     * @description 获取最后一个节点,深度
+     * @param this
+     * @param target
+     * @param fn
+     */
+    depLast(target: Node, fn: (node: Node, index?: number) => boolean): Node | boolean {
+        const childNodes = target.childNodes
+        if (childNodes) {
+            const len = childNodes.length
+            const lastIndex = len - 1
+            const lastNode = childNodes[lastIndex]
+            if (fn(lastNode, lastIndex)) {
+                return lastNode
+            } else {
+                return this.depLast(lastNode, fn)
+            }
+        } else {
+            return false
+        }
+    },
+    /**
      * 查询节点
      * @param selector
      */
-    query(selector: string): Node[] {
+    query(selector: string): Element[] {
         const reuslt = []
         if (ID_SELECTOR_MATCH.test(selector)) {
             return [document.getElementById(selector.replace('#', ''))]
@@ -127,5 +184,64 @@ export const INode: INode = {
         }
         each<Element>(document.querySelectorAll(selector), node => reuslt.push(node))
         return reuslt
+    },
+    /**
+     * @description 设置属性
+     * @param target
+     * @param attributes
+     */
+    attr(target, attributes) {
+        if (type(attributes) === 'String') {
+            return target.getAttribute(attributes as string)
+        } else {
+            Object.entries(attributes).forEach(([key, value]) => {
+                if (value === null) {
+                    target.removeAttribute(key)
+                } else {
+                    target.setAttribute(key, String(value))
+                }
+            })
+        }
+    },
+    /**
+     * @description 创建元素
+     * @param name
+     * @param attrs
+     * @param children
+     */
+
+    c(name: string, attrs?: Attributes | (string | Node)[], children?: (string | Node)[]): Node {
+        const node = document.createElement(name)
+        if (type(attrs) === 'Object') {
+            Object.keys(attrs).forEach(k => {
+                // 类名
+                if (k === 'className') return INode.attr(node, {class: attrs[k]})
+                // 样式
+                if (k === 'style' && typeof attrs[k] === 'object') {
+                    let style = ''
+                    Object.keys(attrs[k]).forEach(styleKey => (style += `${toKebabCase(styleKey)}:${attrs[k][styleKey]};`))
+                    return INode.attr(node, {style})
+                }
+                try {
+                    INode.attr(node, {[toKebabCase(k)]: attrs[k]})
+                } catch {}
+            })
+        }
+
+        if (type(attrs) === 'Array') children = attrs as (string | Node)[]
+
+        if (children)
+            each<string | Node>(children, item => {
+                if (typeof item === 'string') {
+                    node.appendChild(document.createTextNode(item))
+                } else {
+                    node.appendChild(item)
+                }
+            })
+        return node
+    },
+
+    cText(text: string): Node {
+        return document.createTextNode(text)
     },
 }

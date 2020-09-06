@@ -9,5 +9,6 @@ export const PL_MATCH = /^\ufeff$/;
 export const BR_PL_MATCH = /^<br>$/;
 export const HAS_PL_MATCH = /\ufeff/g;
 export const HAS_BR_PL_MATCH = /<br>/g;
+export const BR_AND_PL = /^\ufeff<(\/)?br>$/;
 export const ID_SELECTOR_MATCH = /^#/;
 export const CLASS_SELECTOR_MATCH = /^\./;
