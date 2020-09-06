@@ -1,40 +1,42 @@
-@import "../sty/var";
-.x-tab {
-	text-align: center;
-	color: @tab-color;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	cursor: pointer;
-	flex-grow: 0;
-	flex-shrink: 0;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	height: 40px;
+/** @format */
 
-	&--active {
-		color: @tab-active-color;
-	}
-	&--disable {
-		color: @tab-disable-color;
-		cursor: no-drop;
-	}
-	&__text {
-		overflow: hidden;
-		text-overflow: ellipsis;
-		font-size: @tab-text-color;
-	}
-	&__panel {
-		width: 100%;
-		padding: 10px;
-	}
-	&__panel-wrapper {
-		width: 100%;
-		flex-shrink: 0;
-		&--inactive {
-			height: 0;
-			overflow: visible;
-		}
-	}
+@import '../sty/var';
+.x-tab {
+    text-align: center;
+    color: @tab-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    flex-grow: 0;
+    flex-shrink: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    height: 40px;
+
+    &--active {
+        color: @tab-active-color;
+    }
+    &--disable {
+        color: @tab-disable-color;
+        cursor: no-drop;
+    }
+    &__text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: @tab-text-color;
+    }
+    &__panel {
+        width: 100%;
+        padding: 10px;
+    }
+    &__panel-wrapper {
+        width: 100%;
+        flex-shrink: 0;
+        &--inactive {
+            height: 0;
+            overflow: visible;
+        }
+    }
 }

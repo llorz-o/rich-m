@@ -8,6 +8,7 @@
 		"rich": "./lib/index.js"
 	},
 	"scripts": {
+		"start": "npm run dev",
 		"dev": "tsc --watch"
 	},
 	"keywords": [],

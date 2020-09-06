@@ -1,11 +1,8 @@
 import './index.less'
 import { createNamespace } from '../utils'
-import { indexOf, filter, each, debounce } from '../utils'
-import { toKebabCase } from '../utils';
-import { Editor } from './core/editor';
 import { delay } from './utils';
 import { Point } from './core/point';
-import { Operate } from './core';
+import { Operate, Editor } from './core';
 const [createComponent, bem] = createNamespace("editor")
 /**
  * &#65279; 空占位符
@@ -15,71 +12,18 @@ const [createComponent, bem] = createNamespace("editor")
 const HAS_PL = /\ufeff/g;
 const PL = /^\ufeff$/; // 匹配空占位
 const ALL_PL = /^(\ufeff)+$/ // 匹配全部
-const ACTIVE_CLASS_NAME: string = "cursor_anchor"
+const ACTIVE_CLASS_NAME = "cursor_anchor"
 
 export default createComponent({
 	render(h) {
-
-		return <div
-			spellcheck="false"
-			contenteditable="true"
-			class={bem()}
-			onInput={this.onInput}
-			onFocus={this.onFocus}
-			onChange={this.onChange}
-			onBlur={this.onBlur}
-			onClick={this.onClick}
-			onTouchstart={this.onTouchstart}
-			onKeydown={this.onKeydown}
-			onKeyup={this.onKeyup}
-		>
-			<p data-node="element">
-				<span data-node="text">
-					<span data-string="true" data-length="0">
-						&#65279;
-						<br />
-					</span>
-				</span>
-				{/* <span data-node="text">
-					<span data-string="true">
-						222
-					</span>
-				</span>
-				<span data-node="text">
-					<span data-string="true">
-						111
-					</span>
-				</span> */}
-			</p>
+		return <div>
+			<button onClick={() => this.setColor('black')}>black</button>
+			<div id="editor"></div>
 		</div>
 	},
 	data() {
 		return {
-			lastActiveNode: null,
-			anchor: null,
-			range: null,
-			targetDOM: null,
-			editorContent: 0,
-			anchorInfo: {},
-			currentActiveId: "__black",
-			// 注册字体颜色
-			registerColorMap: {
-				__black: {
-					color: "black"
-				}
-			},
-			// 注册字体样式
-			registerFontStyleMap: {
-
-			},
-			// 注册字体大小
-			registerFontSizeMap: {
-
-			},
-			// 注册字体背景色
-			registerBgColorMap: {
-
-			}
+			editor: null
 		}
 	},
 	methods: {
@@ -474,11 +418,26 @@ export default createComponent({
 		// 		// console.warn("非法dom", element);
 		// 	}
 		// },
+		setColor(color) {
+			this.editor && this.editor.setColor(color)
+		},
 	},
 	mounted() {
 		// this.debounceSyncStyleId = debounce((styId) => this.$emit("style", styId), 50)
 		// this.setCurrentCaretPosition()
 		// this.getCursortPosition()
 		// this.editorContent = this.$el.innerText
+		const editor = this.editor = new Editor("#editor")
+
+		editor.attr({
+			class: bem()
+		});
+
+		editor.register('color', {
+			'black': true
+		})
+
+		console.log(editor);
+
 	}
 })

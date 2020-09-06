@@ -1,61 +1,55 @@
-import { raf, cancelRaf } from "../utils";
+/** @format */
 
-let scrollLeftRafId: number;
-export function scrollLeftTo(
-	scroller: HTMLElement,
-	to: number,
-	duration: number
-) {
-	let count = 0,
-		diff = 0;
+import {raf, cancelRaf} from '../utils'
 
-	const from = scroller.scrollLeft,
-		frames = duration === 0 ? 1 : Math.round((duration * 1000) / 16);
+let scrollLeftRafId: number
+export function scrollLeftTo(scroller: HTMLElement, to: number, duration: number): void {
+    let count = 0,
+        diff = 0
 
-	diff = from;
+    const from = scroller.scrollLeft,
+        frames = duration === 0 ? 1 : Math.round((duration * 1000) / 16)
 
-	cancelRaf(scrollLeftRafId);
+    diff = from
 
-	function animate() {
-		diff += (to - from) / frames;
-		scroller.scrollLeft = diff;
+    cancelRaf(scrollLeftRafId)
 
-		if (++count < frames) {
-			scrollLeftRafId = raf(animate);
-		} else {
-			scrollLeftRafId = raf(() => (scroller.scrollLeft = to));
-		}
-	}
+    function animate() {
+        diff += (to - from) / frames
+        scroller.scrollLeft = diff
 
-	animate();
+        if (++count < frames) {
+            scrollLeftRafId = raf(animate)
+        } else {
+            scrollLeftRafId = raf(() => (scroller.scrollLeft = to))
+        }
+    }
+
+    animate()
 }
 
-let scrollTopRafId: number;
-export function scrollTopTo(
-	scroller: HTMLElement,
-	to: number,
-	duration: number
-) {
-	let count = 0,
-		diff = 0;
+let scrollTopRafId: number
+export function scrollTopTo(scroller: HTMLElement, to: number, duration: number): void {
+    let count = 0,
+        diff = 0
 
-	const from = scroller.scrollTop,
-		frames = duration === 0 ? 1 : Math.round((duration * 1000) / 16);
+    const from = scroller.scrollTop,
+        frames = duration === 0 ? 1 : Math.round((duration * 1000) / 16)
 
-	diff = from;
+    diff = from
 
-	cancelRaf(scrollTopRafId);
+    cancelRaf(scrollTopRafId)
 
-	function animate() {
-		diff += (to - from) / frames;
-		scroller.scrollTop = diff;
+    function animate() {
+        diff += (to - from) / frames
+        scroller.scrollTop = diff
 
-		if (++count < frames) {
-			scrollTopRafId = raf(animate);
-		} else {
-			scrollTopRafId = raf(() => (scroller.scrollTop = to));
-		}
-	}
+        if (++count < frames) {
+            scrollTopRafId = raf(animate)
+        } else {
+            scrollTopRafId = raf(() => (scroller.scrollTop = to))
+        }
+    }
 
-	animate();
+    animate()
 }

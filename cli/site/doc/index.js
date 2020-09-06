@@ -17,11 +17,6 @@ componentsKeys.forEach(key => routes.push({
 
 window.__vue = new Vue({
 	el: "#app",
-	render: h => h(App),
-	router: new VueRouter({
-		mode: "hash",
-		routes,
-	}),
 	data() {
 		return {
 			componentsKeys,
@@ -47,4 +42,9 @@ window.__vue = new Vue({
 		} = this.$route.query
 		this.currentComponent = component
 	},
+	render: h => h(App),
+	router: new VueRouter({
+		mode: "hash",
+		routes,
+	}),
 })

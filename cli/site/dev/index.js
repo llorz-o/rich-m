@@ -10,6 +10,7 @@ Vue.use(VueRouter)
 import home from './views/home.vue'
 import page2 from './views/page2.vue'
 import calendar from './views/calendar.vue'
+import loading from './views/loading.vue'
 
 const _routes = [{
 		path: "/",
@@ -34,6 +35,13 @@ const _routes = [{
 		component: calendar,
 		meta: {
 			title: "日历组件"
+		}
+	},
+	{
+		path: "/loading",
+		component: loading,
+		meta: {
+			title: "加载组件"
 		}
 	},
 ]

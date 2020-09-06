@@ -82,13 +82,13 @@ export default {
 
 ### Calender Props
 
-| prop-name      | describe                             | type       | default-value               |
-| -------------- | ------------------------------------ | ---------- | --------------------------- |
-| height         | 日历高度                             | Number     | 80vh                        |
-| getData        | 获取异步数据                         | *Function* | () => Promise.reslove(true) |
-| firstDayOfWeek | 设置日历的第一天为星期几;0为周日;0-6 | Number     | 0                           |
-| failTip        | getData返回false后的提示语           | String     | 日历请求失败,点击重新请求!  |
-| isBackground   | 是否启用背景                         | Boolean    | false                       |
+| prop-name      | describe                              | type       | default-value               |
+| -------------- | ------------------------------------- | ---------- | --------------------------- |
+| height         | 日历高度                              | String     | 80vh                        |
+| getData        | 获取异步数据                          | _Function_ | () => Promise.reslove(true) |
+| firstDayOfWeek | 设置日历的第一天为星期几;0 为周日;0-6 | Number     | 0                           |
+| failTip        | getData 返回 false 后的提示语         | String     | 日历请求失败,点击重新请求!  |
+| isBackground   | 是否启用背景                          | Boolean    | false                       |
 
 ### Calender Slot
 
@@ -97,4 +97,3 @@ export default {
 | default   | 日历内容               | year, month                                |
 | title     | 关闭该标签的切换与点击 | year, month(0-11), day, currentMonth(1-12) |
 | reqstate  | 请求状态               | isFaild                                    |
-
