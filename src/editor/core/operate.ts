@@ -27,7 +27,7 @@ export interface Operate {
         br: Node
     }
     setColor(color: string): void
-    insertImage(url: string): void
+    insertImage(url: string, $editor: Element): void
     getActiveColor(this: Operate): string | void
 }
 
@@ -58,8 +58,9 @@ export const Operate: Operate = {
      * 处理键盘特殊键入
      */
     disposeKeydown(e: KeyboardEvent, $editor: Element): boolean {
+        Point.getCursor($editor)
         const {key, keyCode, which, charCode} = e
-        const {currentPointElement, currentPointTextElement, currentPointLineElement} = Point
+        const {currentPointElement, currentPointLineElement} = Point
         const is_data_emoji = INode.attr(currentPointElement, 'data-emoji') === 'true'
 
         if (this.isDeleteKey(key, keyCode, which)) {
@@ -86,19 +87,19 @@ export const Operate: Operate = {
             if (isLast === true) {
                 if (previousSibling !== null) {
                     // 前面还有一行
-                    INode.remove(currentPointLineElement)
                     const lastTextNode = INode.depLast(previousSibling, node => {
                         return INode.attr(node as Element, 'data-string') === 'true' || INode.attr(node as Element, 'data-length') === '0'
                     })
                     if (lastTextNode) this.setLastTextNodeEffectEndPos(lastTextNode as Node)
+                    INode.remove(currentPointLineElement)
                 }
                 console.log('a--')
             }
             e.preventDefault()
             return false
         }
-
         if (is_data_emoji) {
+            const {currentPointElement} = Point
             const emptySpan = INode.c('span', {dataLength: 0}, [EMPTY_PL_HTML])
             INode.insertAfter(currentPointElement, emptySpan)
             Point.point(1, emptySpan)
@@ -221,7 +222,7 @@ export const Operate: Operate = {
             currentNode.innerText = innerText.replace(HAS_PL_MATCH, '')
             const onlyoneTextNode = currentNode.childNodes[0]
 
-            Point.point(1, onlyoneTextNode)
+            Point.point(currentNode.innerText.length, onlyoneTextNode)
             INode.attr(currentNode as Element, {
                 'data-length': null,
                 'data-string': true,
@@ -319,35 +320,25 @@ export const Operate: Operate = {
         const {currentPointElement} = Point
         return currentPointElement && INode.attr(currentPointElement, 'data-color')
     },
-    insertImage(url: string): void {
+    insertImage(url: string, $editor: Element): void {
         const {currentPointElement, commonAncestorContainer, offset} = Point
         const data_string = INode.attr(currentPointElement, 'data-string')
+        const is_data_emoji = INode.attr(currentPointElement, 'data-emoji') === 'true'
         const data_color = INode.attr(currentPointElement, 'data-color') as string
         const image = INode.c('img', {src: url})
         const imageSpan = INode.c('span', {dataEmoji: true}, [image])
         const stringSpan = INode.c('span', {dataLength: 0}, [EMPTY_PL_HTML])
-        if (data_string === 'true') {
+        if (data_string === 'true' || is_data_emoji) {
+            if (is_data_emoji) {
+                // 当前为表情
+                INode.insertAfter(currentPointElement, imageSpan)
+                INode.insertAfter(imageSpan, stringSpan)
+                Point.point(1, stringSpan)
+            }
             // 当前text块已经有值
-            if (INode.isTextNode(commonAncestorContainer)) {
+            else if (INode.isTextNode(commonAncestorContainer)) {
                 // 当前为文本节点
                 const nodeValue = commonAncestorContainer.nodeValue
-                if (nodeValue.length === offset) {
-                    // 在结尾位置
-                    INode.insertAfter(currentPointElement, imageSpan)
-                    const nextNode = INode.next(imageSpan)
-                    if (nextNode) {
-                        // 检查下一个节点
-                        Point.point(0, nextNode)
-                    } else {
-                        INode.insertAfter(imageSpan, stringSpan)
-                        Point.point(1, stringSpan)
-                    }
-                }
-                if (offset === 0) {
-                    // 当前在节点头
-                    INode.insertBefore(currentPointElement, imageSpan)
-                    Point.point(0, currentPointElement)
-                }
                 if (nodeValue.length > offset && offset > 0) {
                     // 将当前节点分割
                     const before_text = nodeValue.slice(0, offset)
@@ -355,13 +346,15 @@ export const Operate: Operate = {
                     const beforePointElement = INode.c('span', {dataString: true, dataColor: data_color}, [before_text])
                     const afterPointElement = INode.c('span', {dataString: true, dataColor: data_color}, [after_text])
                     INode.replace(currentPointElement, afterPointElement)
-                    INode.insertBefore(afterPointElement, stringSpan)
-                    INode.insertBefore(stringSpan, imageSpan)
+                    INode.insertBefore(afterPointElement, imageSpan)
                     INode.insertBefore(imageSpan, beforePointElement)
+                    INode.insertAfter(imageSpan, stringSpan)
+                    Point.point(1, stringSpan)
+                } else {
+                    INode.insertAfter(currentPointElement, imageSpan)
+                    INode.insertAfter(imageSpan, stringSpan)
                     Point.point(1, stringSpan)
                 }
-            } else {
-                // 当前不是一个文本节点
             }
         } else {
             INode.attr(currentPointElement, {
@@ -372,7 +365,8 @@ export const Operate: Operate = {
             INode.push(currentPointElement, image)
             INode.insertAfter(currentPointElement, stringSpan)
             Point.point(1, stringSpan)
-            console.log(Point)
         }
+        Point.getCursor($editor)
+        Point.point()
     },
 }

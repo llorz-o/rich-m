@@ -122,7 +122,8 @@ export class Editor {
     }
 
     insertImage(url): void {
-        Operate.insertImage(url)
+        Operate.insertImage(url, this.$el)
+        Point.getCursor(this.$el)
     }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
