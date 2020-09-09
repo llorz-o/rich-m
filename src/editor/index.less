@@ -1,39 +1,76 @@
 /** @format */
-
+button {
+    margin: 10px !important;
+    width: 60px;
+    height: 20px;
+    border: none;
+    background-color: #d5d5d5;
+    border-radius: 5px;
+    color: white !important;
+    font-weight: bold !important;
+}
 .x-editor {
-    min-height: 200px;
-    font-size: 15px;
-    user-select: text;
-    overflow-y: auto;
-    outline: none;
-    cursor: text;
-    border: 1px solid black;
-    padding: 5px;
-    // &[contenteditable="true"]:empty::before {
-    // 	content: attr(placeholder);
+    // min-height: 200px;
+    // font-size: 15px;
+    // overflow-y: auto;
+    // user-select: text;
+    // outline: none;
+    // cursor: text;
+    // border: 1px solid black;
+    // padding: 5px;
+    // // &[contenteditable="true"]:empty::before {
+    // // 	content: attr(placeholder);
+    // // }
+    // box-sizing: border-box;
+    // * {
+    //     box-sizing: border-box;
+    //     margin: 0;
+    //     padding: 0;
     // }
-    box-sizing: border-box;
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
 
-    img {
-        content: ' ';
-        height: 30px;
-        font-size: 0;
+    // img {
+    //     content: ' ';
+    //     height: 30px;
+    //     font-size: 0;
+    //     display: inline-block;
+    //     vertical-align: bottom;
+    //     user-select: text;
+    //     pointer-events: none;
+    // }
+    font-size: 20px;
+    line-height: 20px;
+
+    span {
         display: inline-block;
         vertical-align: bottom;
-        user-select: text;
-        pointer-events: none;
     }
 
-    p {
-        border-bottom: 1px solid black;
+    > [data-node='element'] {
+        // outline: 1px solid black;
+        background-color: #d5d5d5;
+		margin: 5px 0;
+		padding: 5px 0;
     }
 
-    span[data-color='black'] {
+    [data-color='red'] {
         color: red;
+    }
+    [data-color='green'] {
+        color: green;
+    }
+    [data-emoji='true'] {
+        vertical-align: bottom;
+        line-height: 20px;
+        height: 20px;
+        width: 20px;
+        overflow: hidden;
+        img {
+            display: inline-block;
+            vertical-align: bottom;
+            user-select: text;
+            pointer-events: none;
+            height: 20px;
+            width: 20px;
+        }
     }
 }

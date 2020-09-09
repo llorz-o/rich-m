@@ -13,15 +13,22 @@ export interface Operate {
     disposeKeydown(this: Operate, e: KeyboardEvent, $editor: Element): boolean
     isEditorLast(this: Operate): boolean | 'reset' | 'merge'
     isLastNode(this: Operate, target: Element): boolean
-    // isCurrentLineLastBlock(this: Operate, target: Element): Node | boolean;
     isPLNode(this: Operate, node: Element): boolean
     isTextPLNode(this: Operate, node: Element): boolean
     isBrPLNode(this: Operate, node: Element): boolean
     isTextAndBrPLNode(this: Operate, node: Element): boolean
     changeEmptyNodeState(this: Operate, node: Element)
     changeNodeStateToEmpty(this: Operate, node: Element): void
-    createNewLine(): Node
+    createNewLine(): {
+        element: Node
+        text: Node
+        string: Node
+        pl: Node
+        br: Node
+    }
     setColor(color: string): void
+    insertImage(url: string): void
+    getActiveColor(this: Operate): string | void
 }
 
 export const Operate: Operate = {
@@ -52,7 +59,9 @@ export const Operate: Operate = {
      */
     disposeKeydown(e: KeyboardEvent, $editor: Element): boolean {
         const {key, keyCode, which, charCode} = e
-        const {currentPointElement, currentPointTextElement, currentPointLineElement, currentPointTextElementIndex, offset} = Point
+        const {currentPointElement, currentPointTextElement, currentPointLineElement} = Point
+        const is_data_emoji = INode.attr(currentPointElement, 'data-emoji') === 'true'
+
         if (this.isDeleteKey(key, keyCode, which)) {
             const isLast = this.isEditorLast()
             if (!isLast) return true
@@ -89,25 +98,46 @@ export const Operate: Operate = {
             return false
         }
 
+        if (is_data_emoji) {
+            const emptySpan = INode.c('span', {dataLength: 0}, [EMPTY_PL_HTML])
+            INode.insertAfter(currentPointElement, emptySpan)
+            Point.point(1, emptySpan)
+        }
+
         if (this.isEnterKey(key, keyCode, which, charCode)) {
-            if (currentPointTextElementIndex === 0 && currentPointLineElement) {
-                if (currentPointLineElement.childNodes.length === 1) {
-                    delay(() => {
-                        const previousSibling = INode.prev(currentPointLineElement)
-                        const oldPointTextElement = previousSibling && previousSibling.childNodes[currentPointTextElementIndex]
-                        const oldPointElement = INode.depTracking(oldPointTextElement, node => INode.attr(node as Element, 'data-string') === 'true' || INode.attr(node as Element, 'data-length') === '0')
-                        if (oldPointElement) {
-                            if (this.isBrPLNode(oldPointElement as Element) || this.isTextAndBrPLNode(oldPointElement as Element)) this.changeNodeStateToEmpty(oldPointElement as Element)
+            const {currentPointElement, currentPointTextElement, currentPointLineElement} = Point
+            if (currentPointLineElement) {
+                delay(() => {
+                    // const previousSibling = INode.prev(currentPointLineElement)
+                    // const previousSiblingChildNodes = previousSibling.childNodes
+                    // const oldPointTextElement = previousSibling && previousSiblingChildNodes[currentPointTextElementIndex]
+                    // const oldPointElement = INode.depLast(oldPointTextElement, node => INode.attr(node as Element, 'data-string') === 'true' || INode.attr(node as Element, 'data-length') === '0')
+                    // if (oldPointElement) {
+                    //     if (this.isBrPLNode(oldPointElement as Element) || this.isTextAndBrPLNode(oldPointElement as Element)) {
+                    //         if (previousSiblingChildNodes.length === 1) {
+                    //             this.changeNodeStateToEmpty(oldPointElement as Element)
+                    //         } else {
+                    //             INode.remove(oldPointTextElement)
+                    //         }
+                    //     }
+                    // }
+                    const data_length = INode.attr(currentPointElement, 'data-length')
+                    if (data_length === '0') {
+                        if (currentPointTextElement.childNodes.length === 1) {
+                            this.changeNodeStateToEmpty(currentPointElement as Element)
+                        } else {
+                            INode.remove(currentPointElement)
                         }
-                        Point.getCursor($editor)
-                        Point.point()
-                        const {currentPointElement} = Point
-                        if (this.isBrPLNode(currentPointElement) || this.isTextAndBrPLNode(currentPointElement)) {
-                            this.changeNodeStateToEmpty(currentPointElement)
-                            Point.point(1, currentPointElement.childNodes[0])
-                        }
-                    }, 0)
-                }
+                    }
+
+                    Point.getCursor($editor)
+                    Point.point()
+                    const {currentPointElement: newCurrentPointElement} = Point
+                    if (this.isBrPLNode(newCurrentPointElement) || this.isTextAndBrPLNode(newCurrentPointElement)) {
+                        this.changeNodeStateToEmpty(newCurrentPointElement)
+                        Point.point(1, newCurrentPointElement.childNodes[0])
+                    }
+                }, 0)
             }
         }
         return true
@@ -116,24 +146,28 @@ export const Operate: Operate = {
      * 判断当前编辑器是否最后一行
      */
     isEditorLast(): boolean | 'reset' | 'merge' {
-        const {currentPointElement, currentPointTextElement, currentPointLineElement, currentPointTextElementIndex, offset} = Point
+        const {currentPointElement, pointParentElement, currentPointLineElement, currentPointTextElementIndex, offset} = Point
         if (!currentPointElement) return
-        if (INode.attr(currentPointElement, 'data-length') === '0') {
-            return true
-        } else if (currentPointTextElementIndex === 0 && offset === 0) {
-            return 'merge'
-        }
-        if (INode.attr(currentPointElement, 'data-string') === 'true') {
-            if (currentPointLineElement && currentPointLineElement.childNodes.length === 1) {
-                const currentPointElementChildNodes = currentPointElement.childNodes
-                if (currentPointElementChildNodes.length === 1) {
-                    const lastNode = currentPointElementChildNodes[0]
-                    if (!INode.isTextNode(lastNode)) return 'reset'
-                    if (lastNode.nodeValue.length === 1) return 'reset'
+        if (pointParentElement.childNodes.length === 1) {
+            if (INode.attr(currentPointElement, 'data-emoji') === 'true') {
+                return 'reset'
+            }
+            if (INode.attr(currentPointElement, 'data-length') === '0') {
+                return true
+            } else if (currentPointTextElementIndex === 0 && offset === 0) {
+                return 'merge'
+            }
+            if (INode.attr(currentPointElement, 'data-string') === 'true') {
+                if (currentPointLineElement && currentPointLineElement.childNodes.length === 1) {
+                    const currentPointElementChildNodes = currentPointElement.childNodes
+                    if (currentPointElementChildNodes.length === 1) {
+                        const lastNode = currentPointElementChildNodes[0]
+                        if (!INode.isTextNode(lastNode)) return 'reset'
+                        if (lastNode.nodeValue.length === 1) return 'reset'
+                    }
                 }
             }
         }
-
         return false
     },
     /**
@@ -144,31 +178,6 @@ export const Operate: Operate = {
     isLastNode(this: Operate, target: Element): boolean {
         return target.childNodes && target.childNodes.length === 1
     },
-    /**
-     * 当前是否为这一行的最后一个节点
-     * @param target
-     */
-    // isCurrentLineLastBlock(this: Operate, target: Element): Node | boolean {
-    // 	let currentLine = INode.backTracking(
-    // 		target as Node,
-    // 		node => node.nodeName === "P"
-    // 	);
-    // 	// 当前的行节点为哪一个
-    // 	if (currentLine) {
-    // 		let lastBlock = INode.depTracking(currentLine as Node, node => {
-    // 			return (
-    // 				node.nodeType === 1 &&
-    // 				node.nodeName === "SPAN" &&
-    // 				node.childNodes &&
-    // 				node.childNodes[0].nodeType !== 1
-    // 			);
-    // 		});
-
-    // 		return lastBlock;
-    // 	}
-    // 	return false;
-    // },
-
     /**
      * 判断当前节点是否为空占位节点
      * @param node
@@ -229,6 +238,7 @@ export const Operate: Operate = {
             INode.attr(currentNode, {
                 'data-length': 0,
                 'data-string': null,
+                'data-emoji': null,
             })
             currentNode.innerHTML = '&#65279;<br>'
         }
@@ -236,19 +246,133 @@ export const Operate: Operate = {
     /**
      * 创建新的空行
      */
-    createNewLine(): Node {
-        return INode.c('p', {dataNode: 'element'}, [INode.c('span', {dataNode: 'text'}, [INode.c('span', {dataLength: 0}, [EMPTY_PL_HTML, INode.c('br')])])])
-    },
+    createNewLine(): {
+        element: Node
+        text: Node
+        string: Node
+        pl: Node
+        br: Node
+    } {
+        const br = INode.c('br')
+        const pl = INode.cText(EMPTY_PL_HTML)
+        const string = INode.c('span', {dataLength: 0}, [pl, br])
+        const text = INode.c('span', {dataNode: 'text'}, [string])
+        const element = INode.c('p', {dataNode: 'element'}, [text])
 
+        return {
+            element,
+            text,
+            string,
+            br,
+            pl,
+        }
+    },
+    /**
+     * 创建新的色块
+     * @param color
+     */
     setColor(color: string) {
-        const {currentPointElement, currentPointTextElement} = Point
-        if (INode.attr(currentPointElement, 'data-string') === 'true') {
+        const {currentPointElement, commonAncestorContainer, offset} = Point
+        const data_string = INode.attr(currentPointElement, 'data-string')
+        const data_color = INode.attr(currentPointElement, 'data-color') as string
+        if (data_string === 'true' && data_color !== color) {
             // 当前text块已经有值
-            INode.insertAfter(currentPointTextElement, INode.c('span', {dataNode: 'text'}, [INode.c('span', {dataLength: 0, [`data-color`]: color}, [EMPTY_PL_HTML, INode.c('br')])]))
+            if (INode.isTextNode(commonAncestorContainer)) {
+                // 当前为文本节点
+                const nodeValue = commonAncestorContainer.nodeValue
+                const stringSpan = INode.c('span', {dataLength: 0, [`data-color`]: color}, [EMPTY_PL_HTML])
+                if (nodeValue.length === offset) {
+                    // 在结尾位置
+                    INode.insertAfter(currentPointElement, stringSpan)
+                }
+                if (offset === 0) {
+                    // 当前在节点头
+                    INode.insertBefore(currentPointElement, stringSpan)
+                }
+                if (nodeValue.length > offset && offset > 0) {
+                    // 将当前节点分割
+                    const before_text = nodeValue.slice(0, offset)
+                    const after_text = nodeValue.slice(offset)
+
+                    const beforePointElement = INode.c('span', {dataString: true, [`data-color`]: data_color}, [before_text])
+                    const afterPointElement = INode.c('span', {dataString: true, [`data-color`]: data_color}, [after_text])
+
+                    INode.replace(currentPointElement, afterPointElement)
+                    INode.insertBefore(afterPointElement, stringSpan)
+                    INode.insertBefore(stringSpan, beforePointElement)
+                }
+                Point.point(1, stringSpan)
+            } else {
+                // 当前不是一个文本节点
+            }
         } else {
             INode.attr(currentPointElement, {
                 [`data-color`]: color,
             })
+            Point.point(offset, commonAncestorContainer)
+        }
+    },
+    /**
+     * 获取当前激活的颜色
+     */
+    getActiveColor(): string | void {
+        const {currentPointElement} = Point
+        return currentPointElement && INode.attr(currentPointElement, 'data-color')
+    },
+    insertImage(url: string): void {
+        const {currentPointElement, commonAncestorContainer, offset} = Point
+        const data_string = INode.attr(currentPointElement, 'data-string')
+        const data_color = INode.attr(currentPointElement, 'data-color') as string
+        const image = INode.c('img', {src: url})
+        const imageSpan = INode.c('span', {dataEmoji: true}, [image])
+        const stringSpan = INode.c('span', {dataLength: 0}, [EMPTY_PL_HTML])
+        if (data_string === 'true') {
+            // 当前text块已经有值
+            if (INode.isTextNode(commonAncestorContainer)) {
+                // 当前为文本节点
+                const nodeValue = commonAncestorContainer.nodeValue
+                if (nodeValue.length === offset) {
+                    // 在结尾位置
+                    INode.insertAfter(currentPointElement, imageSpan)
+                    const nextNode = INode.next(imageSpan)
+                    if (nextNode) {
+                        // 检查下一个节点
+                        Point.point(0, nextNode)
+                    } else {
+                        INode.insertAfter(imageSpan, stringSpan)
+                        Point.point(1, stringSpan)
+                    }
+                }
+                if (offset === 0) {
+                    // 当前在节点头
+                    INode.insertBefore(currentPointElement, imageSpan)
+                    Point.point(0, currentPointElement)
+                }
+                if (nodeValue.length > offset && offset > 0) {
+                    // 将当前节点分割
+                    const before_text = nodeValue.slice(0, offset)
+                    const after_text = nodeValue.slice(offset)
+                    const beforePointElement = INode.c('span', {dataString: true, dataColor: data_color}, [before_text])
+                    const afterPointElement = INode.c('span', {dataString: true, dataColor: data_color}, [after_text])
+                    INode.replace(currentPointElement, afterPointElement)
+                    INode.insertBefore(afterPointElement, stringSpan)
+                    INode.insertBefore(stringSpan, imageSpan)
+                    INode.insertBefore(imageSpan, beforePointElement)
+                    Point.point(1, stringSpan)
+                }
+            } else {
+                // 当前不是一个文本节点
+            }
+        } else {
+            INode.attr(currentPointElement, {
+                dataString: null,
+                dataEmoji: true,
+            })
+            currentPointElement.innerHTML = ''
+            INode.push(currentPointElement, image)
+            INode.insertAfter(currentPointElement, stringSpan)
+            Point.point(1, stringSpan)
+            console.log(Point)
         }
     },
 }
