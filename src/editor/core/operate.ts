@@ -80,6 +80,8 @@ export const Operate: Operate = {
                     each(allPointTextElement, node => previousSibling.appendChild(node))
                     INode.remove(currentPointLineElement)
                     if (lastTextNode) this.setLastTextNodeEffectEndPos(lastTextNode as Node)
+                    ;($editor as HTMLElement).focus()
+                    Point.getCursor($editor)
                 }
                 console.log('merge')
             }
@@ -103,6 +105,8 @@ export const Operate: Operate = {
             const emptySpan = INode.c('span', {dataLength: 0}, [EMPTY_PL_HTML])
             INode.insertAfter(currentPointElement, emptySpan)
             Point.point(1, emptySpan)
+            ;($editor as HTMLElement).focus()
+            Point.getCursor($editor)
         }
 
         if (this.isEnterKey(key, keyCode, which, charCode)) {
