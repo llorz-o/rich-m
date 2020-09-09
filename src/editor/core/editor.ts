@@ -26,6 +26,12 @@ export class Editor {
             INode.attr(this.$el, {
                 spellcheck: false,
                 contenteditable: true,
+                style: {
+                    whiteSpace: 'pre-wrap',
+                    overflowWrap: 'break-word',
+                    userSelect: 'text',
+                    outline: 'none',
+                },
             })
             this.bind()
             this.init()
@@ -39,15 +45,20 @@ export class Editor {
     }
 
     private init(): void {
-        INode.insertInNode(this.$el, Operate.createNewLine())
+        const {element, pl} = Operate.createNewLine()
+        INode.insertInNode(this.$el, element)
+        ;(this.$el as HTMLElement).focus()
+        Point.point(1, pl)
     }
 
     private bind(): void {
         this.$el.addEventListener('input', e => this.onInput(e))
+        this.$el.addEventListener('click', e => this.onClick(e))
         this.$el.addEventListener('focus', e => this.onFocus(e))
         this.$el.addEventListener('blur', e => this.onBlur(e))
-        this.$el.addEventListener('keydown', e => this.onKeydown(e))
-        this.$el.addEventListener('keyup', e => this.onKeyup(e))
+
+        document.addEventListener('keydown', e => this.onKeydown(e))
+        document.addEventListener('keyup', e => this.onKeyup(e))
     }
 
     private onInput(e) {
@@ -56,15 +67,26 @@ export class Editor {
         Point.getCursor(this.$el)
         Point.point()
         const {currentPointElement} = this.point
-        currentPointElement && data !== null && Operate.changeEmptyNodeState(this.point.currentPointElement)
+        const is_no_string = INode.attr(currentPointElement, 'data-length') === '0'
+        is_no_string && currentPointElement && data !== null && Operate.changeEmptyNodeState(this.point.currentPointElement)
+        this.change()
+    }
+
+    private onClick(e) {
+        console.log('click', e)
+        console.log(Point)
+        Point.getCursor(this.$el)
+        Point.point()
+        this.change()
     }
 
     private onFocus(e) {
-        console.log('focus')
-
         delay(() => {
+            console.log('focus')
             Point.getCursor(this.$el)
             Point.point()
+
+            this.change()
         }, 0)
     }
 
@@ -74,23 +96,35 @@ export class Editor {
 
     private onKeydown(e) {
         console.log('keydown')
-        console.log(this.point)
-        Point.getCursor(this.$el)
-        Point.point()
         Operate.disposeKeydown(e, this.$el)
+
+        this.change()
     }
 
     private onKeyup(e) {
         console.log('keyup')
         Point.getCursor(this.$el)
         Point.point()
+
+        this.change()
+    }
+
+    private change(): void {
+        this.onstyleUpdate(Operate.getActiveColor())
     }
 
     register(type: 'color' | 'style', map = {}): void {
         this.operateMap[type] = map
     }
 
-    setColor(key) {
+    setColor(key: string): void {
         Operate.setColor(key)
     }
+
+    insertImage(url): void {
+        Operate.insertImage(url)
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    onstyleUpdate(style): void {}
 }

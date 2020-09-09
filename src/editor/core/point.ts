@@ -9,9 +9,11 @@ export interface IPoint {
     offset?: number // 光标所在节点的偏移量
     preCaretRange?: Range // 上一个Range
     currentPointElement?: Element // 当前光标所在的元素
+    pointParentElement?: Element // 光标所在元素父节点
     currentPointTextElement?: Element // 当前光标所在文本块元素
     currentPointTextElementIndex?: number // 当前光标所在文本块元素下标
     currentPointLineElement?: Element // 当前光标所在行元素
+    commonAncestorContainer?: Node // 当前光标所在节点的共同父节点
 
     getCursor(this: IPoint, element: Element | Window): void
     point(this: IPoint, pos?: number, targetNode?: Node): void
@@ -82,19 +84,26 @@ export const Point: IPoint = {
         if (this.range) {
             const {collapsed, commonAncestorContainer} = this.range
             if (collapsed) {
+                this.commonAncestorContainer = commonAncestorContainer
                 this.currentPointElement = (INode.isTextNode(commonAncestorContainer) ? commonAncestorContainer.parentElement : commonAncestorContainer) as Element
+                this.pointParentElement = this.currentPointElement.parentNode as Element
                 if (this.currentPointElement) {
                     this.currentPointLineElement = INode.backTracking(this.currentPointElement, node => {
                         if (INode.attr(node as Element, 'data-node') === 'text') this.currentPointTextElement = node as Element
                         return INode.attr(node as Element, 'data-node') === 'element'
                     }) as Element
-                    each(this.currentPointLineElement.childNodes, (node, index) => {
-                        if (node === this.currentPointTextElement) this.currentPointTextElementIndex = index
-                    })
+                    const currentPointLineElementChildNodes = this.currentPointLineElement.childNodes
+                    if (currentPointLineElementChildNodes && currentPointLineElementChildNodes.length) {
+                        each(currentPointLineElementChildNodes, (node, index) => {
+                            if (node === this.currentPointTextElement) this.currentPointTextElementIndex = index
+                        })
+                    }
                     return
                 }
             }
         }
+        this.pointParentElement = null
+        this.commonAncestorContainer = null
         this.currentPointElement = null
         this.currentPointTextElement = null
         this.currentPointLineElement = null

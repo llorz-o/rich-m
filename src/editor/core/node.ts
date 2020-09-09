@@ -3,15 +3,18 @@
 import {ID_SELECTOR_MATCH, CLASS_SELECTOR_MATCH} from './constant'
 import {each, type, toKebabCase} from '@/src/utils'
 
-export type Attributes = Record<string, string | null | number | boolean>
+export type Attributes = Record<string, string | null | number | boolean> | Record<'style', Record<string, unknown>>
 export interface INode {
-    prev(target: Node): Node | null
-    next(target: Node): Node | null
-    remove(target: Node): void
+    push(parent: Node, child: Node): void
+    prev(this: INode, target: Node): Node | null
+    next(this: INode, target: Node): Node | null
+    remove(this: INode, target: Node): void
+    removeAll(this: INode, target: Node): void
+    replace(this: INode, oldChild: Node, newChild: Node): Node | null
     insertBefore(this: INode, target: Node, newNode: Node): void
     insertAfter(this: INode, target: Node, newNode: Node): void
-    isTextNode(node: Node): boolean
-    isElement(node: Node): boolean
+    isTextNode(this: INode, node: Node): boolean
+    isElement(this: INode, node: Node): boolean
     insertInTextNode(this: INode, target: Node, insertNode: Node, pos: number): void
     insertInNode(this: INode, target: Node, insertNode: Node, pos?: number): void
     isBefore(this: INode, target: Node): boolean
@@ -19,7 +22,7 @@ export interface INode {
     backTracking(this: INode, target: Node, fn: (node: Node) => boolean): Node | boolean
     depTracking(this: INode, target: Node, fn: (node: Node) => boolean): Node | false
     depLast(this: INode, target: Node, fn: (node: Node, index?: number) => boolean): Node | boolean
-    query(selector: string): Element[]
+    query(this: INode, selector: string): Element[]
     attr(this: INode, target: Element, attributes: Attributes | string): string | void
 
     c(name: string, attrs?: Attributes, children?: (string | Node)[]): Node
@@ -27,6 +30,9 @@ export interface INode {
 }
 
 export const INode: INode = {
+    push(parent: Node, child: Node): void {
+        parent.appendChild(child)
+    },
     prev(target: Node): Node | null {
         return target.previousSibling
     },
@@ -35,6 +41,14 @@ export const INode: INode = {
     },
     remove(target: Node): void {
         target.parentNode && target.parentNode.removeChild(target)
+    },
+    removeAll(target: Node): void {
+        while (target.firstChild) {
+            this.remove(target)
+        }
+    },
+    replace(oldChild: Node, newChild: Node): Node | null {
+        return oldChild.parentNode && oldChild.parentNode.replaceChild(newChild, oldChild)
     },
     insertBefore(target: Node, newNode: Node): void {
         target.parentNode.insertBefore(newNode, target)
@@ -155,7 +169,7 @@ export const INode: INode = {
      * @param fn
      */
     depLast(target: Node, fn: (node: Node, index?: number) => boolean): Node | boolean {
-        const childNodes = target.childNodes
+        const childNodes = target && target.childNodes
         if (childNodes) {
             const len = childNodes.length
             const lastIndex = len - 1
@@ -191,14 +205,22 @@ export const INode: INode = {
      * @param attributes
      */
     attr(target, attributes) {
+        if (!target || !target.getAttribute) return
         if (type(attributes) === 'String') {
             return target.getAttribute(attributes as string)
         } else {
             Object.entries(attributes).forEach(([key, value]) => {
+                key = toKebabCase(key)
                 if (value === null) {
                     target.removeAttribute(key)
                 } else {
-                    target.setAttribute(key, String(value))
+                    if (key === 'style') {
+                        let style = ''
+                        Object.entries(value).forEach(([styleKey, styleValue]) => (style += `${toKebabCase(styleKey)}:${styleValue};`))
+                        target.setAttribute(key, style)
+                    } else {
+                        target.setAttribute(key, String(value))
+                    }
                 }
             })
         }
