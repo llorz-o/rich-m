@@ -72,15 +72,13 @@ export const Operate: Operate = {
             // 当前行的头部,与上一行合并,没有上一行则保持不变
             if (isLast === 'merge') {
                 if (previousSibling !== null) {
+                    // 前面还有一行
+                    const allPointTextElement = currentPointLineElement.childNodes
+                    const lastTextNode = INode.depLast(previousSibling, node => INode.attr(node as Element, 'data-string') === 'true' || INode.attr(node as Element, 'data-length') === '0')
+                    each(allPointTextElement, node => previousSibling.appendChild(node))
                     delay(() => {
-                        // 前面还有一行
-                        const allPointTextElement = currentPointLineElement.childNodes
-                        const lastTextNode = INode.depLast(previousSibling, node => INode.attr(node as Element, 'data-string') === 'true' || INode.attr(node as Element, 'data-length') === '0')
-                        each(allPointTextElement, node => previousSibling.appendChild(node))
                         if (lastTextNode) this.setLastTextNodeEffectEndPos(lastTextNode as Node)
                         INode.remove(currentPointLineElement)
-                        ;($editor as HTMLElement).focus()
-                        Point.getCursor($editor)
                     }, 0)
                 }
                 console.log('merge')
@@ -88,9 +86,9 @@ export const Operate: Operate = {
             // 当前已经是个空占位元素了,删除当前行
             if (isLast === true) {
                 if (previousSibling !== null) {
+                    // 前面还有一行
+                    const lastTextNode = INode.depLast(previousSibling, node => INode.attr(node as Element, 'data-string') === 'true' || INode.attr(node as Element, 'data-length') === '0')
                     delay(() => {
-                        // 前面还有一行
-                        const lastTextNode = INode.depLast(previousSibling, node => INode.attr(node as Element, 'data-string') === 'true' || INode.attr(node as Element, 'data-length') === '0')
                         if (lastTextNode) this.setLastTextNodeEffectEndPos(lastTextNode as Node)
                         INode.remove(currentPointLineElement)
                     }, 0)
@@ -104,9 +102,9 @@ export const Operate: Operate = {
             const {currentPointElement} = Point
             const emptySpan = INode.c('span', {dataLength: 0}, [EMPTY_PL_HTML])
             INode.insertAfter(currentPointElement, emptySpan)
-            Point.point(1, emptySpan)
-            ;($editor as HTMLElement).focus()
-            Point.getCursor($editor)
+            delay(() => {
+                Point.point(1, emptySpan)
+            }, 0)
         }
 
         if (this.isEnterKey(key, keyCode, which, charCode)) {
