@@ -14,10 +14,7 @@ module.exports = {
 	ignorePatterns: [
 		"package/**",
 		"node_modules/**",
-		"cli/dist/**",
-		"cli/lib/**",
-		"cli/node_modules/**",
-		"cli/old/**",
+		"cli/**/*",
 		"**/*.vue",
 		"**/test/*",
 	]

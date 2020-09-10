@@ -26,13 +26,13 @@ export default function() {
 				);
 				const compiler = Webpack(DOC_CONFIG);
 				const server = new WebpackDevServer(compiler);
-				server.listen(5002, "localhost", err => {
+				server.listen(8092, "localhost", err => {
 					if (err) {
 						console.error(err);
 						reject(err);
 						return;
 					}
-					console.log("dev server run http://localhost:5002");
+					console.log("dev server run http://localhost:8092");
 					resolve();
 				});
 			})

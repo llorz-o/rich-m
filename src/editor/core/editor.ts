@@ -45,10 +45,10 @@ export class Editor {
     }
 
     private init(): void {
-        const {element, pl} = Operate.createNewLine()
+        const {element} = Operate.createNewLine()
         INode.insertInNode(this.$el, element)
         ;(this.$el as HTMLElement).focus()
-        Point.point(1, pl)
+        Point.point(0, element)
     }
 
     private bind(): void {
@@ -62,67 +62,58 @@ export class Editor {
     }
 
     private onInput(e) {
-        console.log('input', e)
-        const {data} = e
         Point.getCursor(this.$el)
         Point.point()
-        const {currentPointElement} = this.point
-        const is_no_string = INode.attr(currentPointElement, 'data-length') === '0'
-        is_no_string && currentPointElement && data !== null && Operate.changeEmptyNodeState(this.point.currentPointElement)
-        this.change()
     }
 
     private onClick(e) {
         console.log('click', e)
-        console.log(Point)
         Point.getCursor(this.$el)
         Point.point()
-        this.change()
     }
 
     private onFocus(e) {
+        Operate.isFocus = true
         delay(() => {
             console.log('focus')
             Point.getCursor(this.$el)
             Point.point()
-
-            this.change()
         }, 0)
     }
 
     private onBlur(e) {
+        Operate.isFocus = false
         console.log('blur')
     }
 
     private onKeydown(e) {
         console.log('keydown')
         Operate.disposeKeydown(e, this.$el)
-
         this.change()
     }
 
     private onKeyup(e) {
-        console.log('keyup')
-        Point.getCursor(this.$el)
-        Point.point()
-
-        this.change()
+        delay(() => {
+            Point.getCursor(this.$el)
+            Point.point()
+            console.log('keyup', Point)
+        }, 0)
     }
 
     private change(): void {
-        this.onstyleUpdate(Operate.getActiveColor())
+        //
     }
 
     register(type: 'color' | 'style', map = {}): void {
-        this.operateMap[type] = map
+        // this.operateMap[type] = map
     }
 
     setColor(key: string): void {
+        //
         Operate.setColor(key)
     }
 
     insertImage(url): void {
-        Operate.insertImage(url, this.$el)
         Point.getCursor(this.$el)
     }
 

@@ -9,8 +9,9 @@ export interface INode {
     prev(this: INode, target: Node): Node | null
     next(this: INode, target: Node): Node | null
     remove(this: INode, target: Node): void
-    removeAll(this: INode, target: Node): void
+    removeAll(this: INode, parent: Node): void
     replace(this: INode, oldChild: Node, newChild: Node): Node | null
+    nodeIndex(target: Node): number | null
     insertBefore(this: INode, target: Node, newNode: Node): void
     insertAfter(this: INode, target: Node, newNode: Node): void
     isTextNode(this: INode, node: Node): boolean
@@ -19,7 +20,7 @@ export interface INode {
     insertInNode(this: INode, target: Node, insertNode: Node, pos?: number): void
     isBefore(this: INode, target: Node): boolean
     isAfter(this: INode, target: Node): boolean
-    backTracking(this: INode, target: Node, fn: (node: Node) => boolean): Node | boolean
+    backTracking(this: INode, target: Node, fn: (node: Node) => boolean): Node | null
     depTracking(this: INode, target: Node, fn: (node: Node) => boolean): Node | false
     depLast(this: INode, target: Node, fn: (node: Node, index?: number) => boolean): Node | boolean
     query(this: INode, selector: string): Element[]
@@ -43,16 +44,35 @@ export const INode: INode = {
         target.parentNode && target.parentNode.removeChild(target)
     },
     removeAll(target: Node): void {
-        while (target.firstChild) {
-            this.remove(target)
-        }
+        if (target.childNodes) each(target.childNodes, node => this.remove(node))
     },
     replace(oldChild: Node, newChild: Node): Node | null {
         return oldChild.parentNode && oldChild.parentNode.replaceChild(newChild, oldChild)
     },
+    nodeIndex(target: Node): number | null {
+        if (target && target.parentNode) {
+            let index = null
+            each(target.parentNode.childNodes, (node, _index) => {
+                if (node === target) index = _index
+            })
+            return index
+        } else {
+            return null
+        }
+    },
+    /**
+     * 前插
+     * @param target
+     * @param newNode
+     */
     insertBefore(target: Node, newNode: Node): void {
         target.parentNode.insertBefore(newNode, target)
     },
+    /**
+     * 后插
+     * @param target
+     * @param newNode
+     */
     insertAfter(target: Node, newNode: Node): void {
         const next = this.next(target)
         if (next) {
@@ -130,8 +150,8 @@ export const INode: INode = {
      * @param this
      * @param fn
      */
-    backTracking(target: Node, fn: (node: Node) => boolean): Node | boolean {
-        if (!target) return false
+    backTracking(target: Node, fn: (node: Node) => boolean): Node | null {
+        if (!target) return null
         const parentNode = target.parentNode
         if (parentNode) {
             if (fn(parentNode)) {
@@ -140,7 +160,7 @@ export const INode: INode = {
                 return this.backTracking(parentNode, fn)
             }
         } else {
-            return false
+            return null
         }
     },
     /**
@@ -239,11 +259,7 @@ export const INode: INode = {
                 // 类名
                 if (k === 'className') return INode.attr(node, {class: attrs[k]})
                 // 样式
-                if (k === 'style' && typeof attrs[k] === 'object') {
-                    let style = ''
-                    Object.keys(attrs[k]).forEach(styleKey => (style += `${toKebabCase(styleKey)}:${attrs[k][styleKey]};`))
-                    return INode.attr(node, {style})
-                }
+                if (k === 'style' && typeof attrs[k] === 'object') return INode.attr(node, {style: attrs[k]})
                 try {
                     INode.attr(node, {[toKebabCase(k)]: attrs[k]})
                 } catch {}

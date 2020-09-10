@@ -8,16 +8,18 @@ export interface IPoint {
     range?: Range
     offset?: number // 光标所在节点的偏移量
     preCaretRange?: Range // 上一个Range
-    currentPointElement?: Element // 当前光标所在的元素
     pointParentElement?: Element // 光标所在元素父节点
-    currentPointTextElement?: Element // 当前光标所在文本块元素
-    currentPointTextElementIndex?: number // 当前光标所在文本块元素下标
-    currentPointLineElement?: Element // 当前光标所在行元素
+    pointNode?: Node // 当前光标所在节点
+    pointNodeIndex?: number // 当前光标所在节点下标
+    pointElement?: Element // 当前光标所在的元素
+    pointElementIndex?: number // 当前光标所在的元素下标
+    pointLineElement?: Element // 当前光标所在行元素
+    // pointLineElementIndex?: number //  当前光标所在行元素 下标
     commonAncestorContainer?: Node // 当前光标所在节点的共同父节点
 
     getCursor(this: IPoint, element: Element | Window): void
     point(this: IPoint, pos?: number, targetNode?: Node): void
-    pointElement(this: IPoint): void
+    getPointElement(this: IPoint): void
 }
 
 export const Point: IPoint = {
@@ -39,7 +41,7 @@ export const Point: IPoint = {
             this.range = range
             this.sel = sel
             this.preCaretRange = preCaretRange
-            this.pointElement()
+            this.getPointElement()
         } else {
             console.warn('当前无法获取选中区')
         }
@@ -80,33 +82,32 @@ export const Point: IPoint = {
     /**
      * @description 获取当前光标所在位置的元素
      */
-    pointElement(): void {
+    getPointElement(): void {
         if (this.range) {
             const {collapsed, commonAncestorContainer} = this.range
             if (collapsed) {
                 this.commonAncestorContainer = commonAncestorContainer
-                this.currentPointElement = (INode.isTextNode(commonAncestorContainer) ? commonAncestorContainer.parentElement : commonAncestorContainer) as Element
-                this.pointParentElement = this.currentPointElement.parentNode as Element
-                if (this.currentPointElement) {
-                    this.currentPointLineElement = INode.backTracking(this.currentPointElement, node => {
-                        if (INode.attr(node as Element, 'data-node') === 'text') this.currentPointTextElement = node as Element
-                        return INode.attr(node as Element, 'data-node') === 'element'
-                    }) as Element
-                    const currentPointLineElementChildNodes = this.currentPointLineElement.childNodes
-                    if (currentPointLineElementChildNodes && currentPointLineElementChildNodes.length) {
-                        each(currentPointLineElementChildNodes, (node, index) => {
-                            if (node === this.currentPointTextElement) this.currentPointTextElementIndex = index
-                        })
-                    }
-                    return
+                if (INode.isTextNode(commonAncestorContainer)) {
+                    this.pointElement = commonAncestorContainer.parentElement
+                    this.pointNode = commonAncestorContainer
+                } else {
+                    this.pointElement = commonAncestorContainer as Element
+                    this.pointNode = null
                 }
+                this.pointParentElement = this.pointElement.parentNode as Element
+                if (this.pointNode) {
+                    each(this.pointElement.childNodes, (node, index) => {
+                        if (node === this.pointNode) this.pointNodeIndex = index
+                    })
+                }
+                each(this.pointParentElement.childNodes, (node, index) => {
+                    if (node === this.pointElement) this.pointElementIndex = index
+                })
+                this.pointLineElement = INode.backTracking(this.pointElement, node => INode.attr(node as Element, 'data-node') === 'element') as Element
+                return
             }
         }
         this.pointParentElement = null
-        this.commonAncestorContainer = null
-        this.currentPointElement = null
-        this.currentPointTextElement = null
-        this.currentPointLineElement = null
-        this.currentPointTextElementIndex = null
+        this.pointElement = null
     },
 }
