@@ -27,7 +27,13 @@ a {
     }
 }
 
-[class*='x-hairline'] {
+[class*='rich-'] {
+    &:focus {
+        outline: none;
+    }
+}
+
+[class*='rich-hairline'] {
     position: relative;
     &::after {
         position: absolute;
@@ -46,7 +52,7 @@ a {
     }
 }
 
-.x-hairline {
+.rich-hairline {
     &--bottom::after {
         border-bottom-width: 1px;
     }

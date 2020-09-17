@@ -1,0 +1,28 @@
+/** @format */
+@import '../sty/var.less';
+
+.rich-header {
+    width: 100%;
+    display: flex;
+    background-color: @header-background-color;
+    position: relative;
+    z-index: 10;
+    > * {
+        height: 40px;
+
+        line-height: 40px;
+        overflow: hidden;
+    }
+    &__left {
+        width: 30%;
+        padding-left: 15px;
+    }
+    &__center {
+        width: 40%;
+        text-align: center;
+    }
+    &__right {
+        width: 30%;
+        padding-right: 15px;
+    }
+}

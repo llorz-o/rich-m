@@ -5,8 +5,8 @@ const [createComponent, bem] = createNamespace("loading")
 
 export default createComponent({
 	props: {
-		color: String,
 		text: String,
+		color: String,
 		size: {
 			type: Number,
 			default: 16

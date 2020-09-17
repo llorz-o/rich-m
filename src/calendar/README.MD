@@ -1,6 +1,6 @@
 # Calendar 日历组件
 
-### 引入
+## 引入
 
 ```javascript
 import Vue from "vue";
@@ -45,7 +45,7 @@ export default {
 		{{ year }}/{{ month }}
 	</template>
 	<template v-slot:default="{ year, month, day, currentMonth }">
-		<div class="day x-hairline--top" :class="{ toMonth: Number(month) + 1 === Number(currentMonth)}">
+		<div class="day rich-hairline--top" :class="{ toMonth: Number(month) + 1 === Number(currentMonth)}">
 			Y: {{ year }}<br />
 			M: {{ month }}<br />
 			D:{{ day }}<br />

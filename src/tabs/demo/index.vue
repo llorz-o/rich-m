@@ -1,5 +1,6 @@
 <template>
-  <div class="tabsDemo">
+  <layout class="tabsDemo">
+    <Header slot="header" left-text="返回" title="标签页" @click-left="$router.go(-1)" />
     <Block title="基础用法">
       <tabs animated>
         <tab title="标签1">
@@ -14,7 +15,7 @@
       </tabs>
     </Block>
     <Block title="滑动切换与粘性布局">
-      <tabs animated swiper sticky>
+      <tabs animated swiper sticky offset-top="40px">
         <tab title="标签1">
           <Fill>1</Fill>
         </tab>
@@ -80,19 +81,23 @@
         </tab>
       </tabs>
     </Block>
-  </div>
+  </layout>
 </template>
 
 <script>
-export const name = "标签页";
-export default {};
+/** @format */
+
+export const name = '标签页'
+export default {}
 </script>
 
 <style lang="less">
+/** @format */
+
 .tabsDemo {
-  height: 100vh;
-  .x-tabs {
-    height: 100%;
-  }
+    height: 100vh;
+    .rich-tabs {
+        height: 100%;
+    }
 }
 </style>

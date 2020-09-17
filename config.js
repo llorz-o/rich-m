@@ -1,5 +1,5 @@
 module.exports = {
-    tagPrefix: "x-",
+    tagPrefix: "rich-",
     leftNav: [{
         path: "tabs",
         title: "Tab 标签页"

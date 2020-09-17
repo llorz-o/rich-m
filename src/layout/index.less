@@ -1,0 +1,32 @@
+/** @format */
+
+.rich-layout {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    &__header {
+        height: 0px;
+        z-index: 10;
+    }
+    &__content {
+        flex: 1;
+        overflow-y: auto;
+        touch-action: pan-y;
+        &::before,
+        &::after {
+            position: relative;
+            display: block;
+            content: '';
+            width: 100vw;
+        }
+    }
+    &__footer {
+        height: 0px;
+        z-index: 10;
+        > * {
+            margin-top: -50px;
+        }
+    }
+}

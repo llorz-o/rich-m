@@ -25,7 +25,6 @@ export interface INode {
     depLast(this: INode, target: Node, fn: (node: Node, index?: number) => boolean): Node | boolean
     query(this: INode, selector: string): Element[]
     attr(this: INode, target: Element, attributes: Attributes | string): string | void
-
     c(name: string, attrs?: Attributes, children?: (string | Node)[]): Node
     cText(text: string): Node
 }
@@ -41,7 +40,7 @@ export const INode: INode = {
         return target.nextSibling
     },
     remove(target: Node): void {
-        target.parentNode && target.parentNode.removeChild(target)
+        target && target.parentNode && target.parentNode.removeChild(target)
     },
     removeAll(target: Node): void {
         if (target.childNodes) each(target.childNodes, node => this.remove(node))
@@ -164,7 +163,7 @@ export const INode: INode = {
         }
     },
     /**
-     * 深度遍历
+     * 深度遍历 第0个节点
      * @param target
      * @param fn
      */

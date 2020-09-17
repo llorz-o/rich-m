@@ -2,15 +2,14 @@ import Vue from "vue"
 import VueRouter from 'vue-router'
 import '../index'
 import App from './App.vue'
-import Rich from './lib/es6'
 
-Vue.use(Rich)
 Vue.use(VueRouter)
 
 import home from './views/home.vue'
 import page2 from './views/page2.vue'
-import calendar from './views/calendar.vue'
 import loading from './views/loading.vue'
+import layout from './views/layout.vue'
+import layout2 from './views/layout2.vue'
 
 const _routes = [{
 		path: "/",
@@ -31,20 +30,31 @@ const _routes = [{
 		}
 	},
 	{
-		path: "/calendar",
-		component: calendar,
-		meta: {
-			title: "日历组件"
-		}
-	},
-	{
 		path: "/loading",
 		component: loading,
 		meta: {
 			title: "加载组件"
 		}
 	},
+	{
+		path: "/layout",
+		component: layout,
+		meta: {
+			title: "布局组件"
+		}
+	},
+	{
+		path: "/layout2",
+		component: layout2,
+		meta: {
+			title: "布局组件"
+		}
+	},
 ]
+
+const $bus = new Vue({})
+
+Vue.prototype.$bus = $bus
 
 window.__vue = new Vue({
 	el: "#app",
@@ -56,6 +66,11 @@ window.__vue = new Vue({
 	data() {
 		return {
 			localRoutes: _routes
+		}
+	},
+	watch: {
+		$route(news) {
+			console.log(news);
 		}
 	},
 })

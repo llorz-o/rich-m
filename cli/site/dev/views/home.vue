@@ -1,14 +1,9 @@
 <template>
   <div class="home">
-    <div
-      class="editor"
-      contenteditable="true"
-      @change="onChange"
-      @input="onInput"
-      @keydown="onKeydown"
-      @keypress="onKeypress"
-      @keyup="onKeyup"
-    >
+    <router-link :to="item.path" v-for="(item, index) in $root.localRoutes" :key="index">
+      {{ item.path }}
+    </router-link>
+    <div class="editor" contenteditable="true" @change="onChange" @input="onInput" @keydown="onKeydown" @keypress="onKeypress" @keyup="onKeyup">
       12
     </div>
     <div>
@@ -35,86 +30,90 @@
 </template>
 
 <script>
+/** @format */
+
 export default {
-  data() {
-    return {
-      list: [],
-    };
-  },
-  methods: {
-    onKeydown(e) {
-      console.log("keydown", e);
-      let { charCode, code, key, keyCode, type, which } = e;
-      this.list.unshift({
-        charCode,
-        code,
-        key,
-        keyCode,
-        type,
-        which,
-      });
+    data() {
+        return {
+            list: [],
+        }
     },
-    onKeypress(e) {
-      console.log("keypress", e);
-      let { charCode, code, key, keyCode, type, which } = e;
-      this.list.unshift({
-        charCode,
-        code,
-        key,
-        keyCode,
-        type,
-        which,
-      });
+    methods: {
+        onKeydown(e) {
+            console.log('keydown', e)
+            let {charCode, code, key, keyCode, type, which} = e
+            this.list.unshift({
+                charCode,
+                code,
+                key,
+                keyCode,
+                type,
+                which,
+            })
+        },
+        onKeypress(e) {
+            console.log('keypress', e)
+            let {charCode, code, key, keyCode, type, which} = e
+            this.list.unshift({
+                charCode,
+                code,
+                key,
+                keyCode,
+                type,
+                which,
+            })
+        },
+        onKeyup(e) {
+            console.log('keyup', e)
+            let {charCode, code, key, keyCode, type, which} = e
+            this.list.unshift({
+                charCode,
+                code,
+                key,
+                keyCode,
+                type,
+                which,
+            })
+        },
+        onInput(e) {
+            console.log('input', e)
+        },
+        onChange(e) {
+            console.log('change', e)
+        },
     },
-    onKeyup(e) {
-      console.log("keyup", e);
-      let { charCode, code, key, keyCode, type, which } = e;
-      this.list.unshift({
-        charCode,
-        code,
-        key,
-        keyCode,
-        type,
-        which,
-      });
-    },
-    onInput(e) {
-      console.log("input", e);
-    },
-    onChange(e) {
-      console.log("change", e);
-    },
-  },
-};
+}
 </script>
 
 <style lang="less">
+/** @format */
+
 .home {
-  .editor {
-    width: 100vw;
-    height: 200px;
-    border: 2px solid black;
-  }
-  button {
-    height: 30px;
-    line-height: 30px;
-    min-width: 60px;
-    margin: 0 5px;
-    &.active {
-      outline: 3px solid red;
+    .editor {
+        width: 100vw;
+        height: 200px;
+        border: 2px solid black;
     }
-  }
-  table {
-    width: 100vw;
-    tr,
-    th {
-      width: 100vw;
-      td {
-        height: 20px;
-        line-height: 20px;
-        text-align: center;
-      }
+    button {
+        height: 30px;
+        line-height: 30px;
+        min-width: 60px;
+        margin: 0 5px;
+        &.active {
+            outline: 3px solid red;
+        }
     }
-  }
+    table {
+        width: 100vw;
+        tr,
+        th {
+            width: 100vw;
+            td {
+                height: 20px;
+                line-height: 20px;
+                text-align: center;
+            }
+        }
+    }
 }
 </style>

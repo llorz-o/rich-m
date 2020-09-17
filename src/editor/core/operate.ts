@@ -30,6 +30,7 @@ export interface Operate {
     setColor(this: Operate, color: string): void
     insertImage(this: Operate, url: string, $editor: Element): void
     getActiveColor(this: Operate): string | void
+    checkEmptyNode(this: Operate): void
 }
 
 export const Operate: Operate = {
@@ -154,18 +155,45 @@ export const Operate: Operate = {
             {
                 color: '',
                 style: {
-                    color: color,
+                    color,
                 },
             },
             [textNode],
         )
+        const is_not_color = INode.attr(pointElement, 'color') === null
         if (this.isBrPLNode(pointElement)) {
-            INode.removeAll(pointElement)
-            INode.push(pointElement, colorSpan)
+            if (is_not_color) {
+                const colorSpan = INode.c(
+                    'span',
+                    {
+                        color: '',
+                        style: {
+                            color,
+                        },
+                    },
+                    [INode.c('br')],
+                )
+
+                INode.removeAll(pointElement)
+                INode.push(pointElement, colorSpan)
+
+                this.emptyWeakMap.set(colorSpan, true)
+                this.emptyNode = colorSpan
+                this.activeColor = color
+                Point.point(0, colorSpan)
+            } else {
+                INode.attr(pointElement, {
+                    style: {
+                        color,
+                    },
+                })
+                Point.point(1, pointElement)
+            }
         } else {
             if (pointNode && INode.isTextNode(pointNode)) {
-                const is_not_color = INode.attr(pointElement, 'color') === null
-                if (pointNode.nodeValue.length === offset) {
+                if (this.isTextPLNode(pointElement)) {
+                    INode.replace(pointElement, colorSpan)
+                } else if (pointNode.nodeValue.length === offset) {
                     // 尾部
                     INode.insertAfter(is_not_color ? pointNode : pointElement, colorSpan)
                 } else if (offset === 0) {
@@ -194,12 +222,14 @@ export const Operate: Operate = {
                         INode.insertBefore(colorSpan, beforeNode)
                     }
                 }
+                this.emptyWeakMap.set(colorSpan, true)
+                this.emptyNode = colorSpan
+                this.activeColor = color
+                Point.point(1, textNode)
+            } else {
+                console.warn(`pointNode:[${pointNode}]不是一个文本节点`)
             }
         }
-        this.emptyWeakMap.set(colorSpan, true)
-        this.emptyNode = colorSpan
-        this.activeColor = color
-        Point.point(1, colorSpan)
     },
     /**
      * 获取当前激活的颜色
@@ -209,5 +239,19 @@ export const Operate: Operate = {
     },
     insertImage(url: string, $editor: Element): void {
         //
+    },
+    /**
+     * 检查失去焦点前的空节点
+     */
+    checkEmptyNode(): void {
+        const {pointElement} = Point
+        if (this.emptyNode && pointElement !== this.emptyNode) {
+            // const elementNode = INode.backTracking(this.emptyNode, node => INode.attr(node as Element, 'data-node') === 'element')
+            const preventNode = INode.prev(this.emptyNode)
+            const nextNode = INode.next(this.emptyNode)
+            if (!preventNode && !nextNode) return
+            INode.remove(this.emptyNode)
+            this.emptyNode = null
+        }
     },
 }

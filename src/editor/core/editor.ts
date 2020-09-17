@@ -70,6 +70,7 @@ export class Editor {
         console.log('click', e)
         Point.getCursor(this.$el)
         Point.point()
+        Operate.checkEmptyNode()
     }
 
     private onFocus(e) {

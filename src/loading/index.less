@@ -1,70 +1,73 @@
-@import "../sty/var.less";
-.x-loading {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	&__text {
-		margin-right: 5px;
-	}
-	&__icon {
-		&--circle {
-			display: block;
-			width: 16px;
-			height: 16px;
-			border-width: 2px;
-			border-top-color: @loading-color;
-			border-right-color: @loading-color;
-			border-bottom-color: @loading-color;
-			border-left-color: transparent;
-			border-style: solid;
-			border-radius: 50%;
-			z-index: 10;
-			animation-name: ever;
-			animation-duration: 300ms;
-			animation-iteration-count: infinite;
-			animation-timing-function: linear;
+/** @format */
 
-			@keyframes ever {
-				0% {
-					transform: rotate(0deg);
-				}
-				to {
-					transform: rotate(360deg);
-				}
-			}
-		}
+@import '../sty/var.less';
+.rich-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-		&--point {
-			display: flex;
-			align-items: center;
-			justify-content: space-evenly;
+    &__text {
+        margin-right: 5px;
+    }
+    &__icon {
+        &--circle {
+            display: block;
+            width: 16px;
+            height: 16px;
+            border-width: 2px;
+            border-top-color: @loading-color;
+            border-right-color: @loading-color;
+            border-bottom-color: @loading-color;
+            border-left-color: transparent;
+            border-style: solid;
+            border-radius: 50%;
+            z-index: 10;
+            animation-name: ever;
+            animation-duration: 300ms;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
 
-			> i {
-				width: 4px;
-				height: 4px;
-				border-radius: 50%;
-				animation-name: tb;
-				animation-duration: 2s;
-				animation-timing-function: linear;
-				animation-iteration-count: infinite;
+            @keyframes ever {
+                0% {
+                    transform: rotate(0deg);
+                }
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+        }
 
-				@keyframes tb {
-					0% {
-						opacity: 0.5;
-					}
-					10% {
-						opacity: 1;
-						transform: translateY(-8px);
-					}
+        &--point {
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
 
-					50% {
-						transform: translateY(0px);
-					}
-					100% {
-						transform: translateY(0px);
-					}
-				}
-			}
-		}
-	}
+            > i {
+                width: 4px;
+                height: 4px;
+                border-radius: 50%;
+                animation-name: tb;
+                animation-duration: 2s;
+                animation-timing-function: linear;
+                animation-iteration-count: infinite;
+
+                @keyframes tb {
+                    0% {
+                        opacity: 0.5;
+                    }
+                    10% {
+                        opacity: 1;
+                        transform: translateY(-8px);
+                    }
+
+                    50% {
+                        transform: translateY(0px);
+                    }
+                    100% {
+                        transform: translateY(0px);
+                    }
+                }
+            }
+        }
+    }
 }

@@ -9,8 +9,8 @@ const [createComponent, bem] = createNamespace('tabs')
 
 export default createComponent({
 	props: {
-		// v-model
-		vModel: Number,
+		// index.sync
+		index: Number,
 		// tab 切换左右滑动动画效果
 		animated: Boolean,
 		// 手势
@@ -31,12 +31,13 @@ export default createComponent({
 			type: String,
 			default: "default" // "card"
 		},
+		// 粘性布局顶部距离
+		offsetTop: {
+			type: String,
+			default: "0px"
+		}
 	},
 	mixins: [MixinParent('xTabs')],
-	model: {
-		event: "v",
-		prop: "vModel"
-	},
 	data() {
 		return {
 			test: "name",
@@ -55,9 +56,9 @@ export default createComponent({
 		},
 		currentIndex(news) {
 			this.setIndicator()
-			this.$emit("v", Number(news))
+			this.$emit("update:index", Number(news))
 		},
-		vModel(news) {
+		index(news) {
 			if (this.effectCurrentIndexs.indexOf(news) < 0) {
 				console.warn("当前下标不存在");
 			} else {
@@ -124,7 +125,7 @@ export default createComponent({
 			if (this.scroll) (this.$refs.content as IContent).scrollToIndexPosition(this.currentIndex)
 		},
 		// 滚动标题栏
-		scrollTitleTo(index) {
+		scrollTitleTo(index: number) {
 			this.currentIndex = index
 			if (this.scrollable) {
 				index = index < 2 ? 2 : index
@@ -185,7 +186,10 @@ export default createComponent({
 		return (<div class={bem([this.type])}>
 			<div class={[bem('wrap', {
 				sticky: this.sticky
-			}), 'x-hairline--bottom',]}>
+			}), 'rich-hairline--bottom',]}
+				style={{
+					top: this.offsetTop
+				}}>
 				{this.slots("nav-left")}
 				<div class={bem('nav', [this.type])} ref="tabList">
 					{Nav}

@@ -1,16 +1,17 @@
 <template>
-  <div>
-    <editor />
-  </div>
+  <layout>
+    <template #header>
+      <Header title="header" @click-left="$router.go(-1)">
+        <template #left>
+          返回
+        </template>
+      </Header>
+    </template>
+  </layout>
 </template>
 
 <script>
-export default {
-  components: {},
-  data() {
-    return {
-      showPop: false,
-    };
-  },
-};
+/** @format */
+
+export default {}
 </script>

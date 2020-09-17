@@ -1,3 +1,3 @@
 export const getComponentName = (name: string): string => {
-	return "x-" + name;
+	return "rich-" + name;
 };

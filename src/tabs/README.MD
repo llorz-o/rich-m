@@ -1,6 +1,6 @@
 # Tabs 标签页
 
-### 引入
+## 引入
 
 ```js
 import Vue from "vue";
@@ -13,7 +13,7 @@ Vue.component(Tabs.name, Tabs);
 
 ### 基础用法
 
-通过`v-model`绑定当前激活的 tab 的索引值,默认为`0`,亦可不绑定.
+通过`index.sync`绑定当前激活的 tab 的索引值,默认为`0`,亦可不绑定.
 
 ```vue
 <tabs animated>
@@ -122,7 +122,7 @@ Vue.component(Tabs.name, Tabs);
 
 | prop-name       | describe                     | type           | default-value |
 | --------------- | ---------------------------- | -------------- | ------------- |
-| v-model         | 绑定当前选中标签的下标       | Number         | none          |
+| index.sync         | 绑定当前选中标签的下标       | Number         | none          |
 | animated        | 开启切换动画                 | Boolean        | false         |
 | swiper          | 开启手势滑动切换             | Boolean        | false         |
 | sticky          | 开启粘性 title               | Boolean        | false         |
@@ -130,6 +130,7 @@ Vue.component(Tabs.name, Tabs);
 | content-height  | 设置内容区高度 ["200px",200] | String\|Number | none          |
 | swipe-threshold | 超过该值将开启 title 滚动    | Number         | 4             |
 | type            | 样式,["card"]                | String         | default       |
+| offset-top | 粘性布局顶部距离 | String | 0px |
 
 ### Tab Props
 
