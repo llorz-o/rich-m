@@ -25,7 +25,7 @@ export default {
     },
     mounted() {
         const width = window.screen.width
-        if (width <= 768) location.href = 'https://llorz-o.github.io/rich-m/dev' + '/#' + this.$route.fullPath
+        if (width <= 768) location.href = 'https://llorz-o.github.io/rich-m/demo' + '/#' + this.$route.fullPath
     },
 }
 </script>
