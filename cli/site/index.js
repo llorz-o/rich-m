@@ -34,6 +34,15 @@ requireComponent.keys().forEach(fileName => {
 		// 否则回退到使用模块的根。
 		componentConfig.default || componentConfig
 	)
+
+	// 全局注册组件
+	Vue.component(
+		'Rich' + componentName,
+		// 如果这个组件选项是通过 `export default` 导出的，
+		// 那么就会优先使用 `.default`，
+		// 否则回退到使用模块的根。
+		componentConfig.default || componentConfig
+	)
 })
 
 const demoPages = []

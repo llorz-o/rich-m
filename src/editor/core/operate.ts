@@ -4,7 +4,7 @@ import {PL_MATCH, BR_PL_MATCH, EMPTY_PL_HTML, BR_AND_PL, HAS_PL_MATCH} from './c
 import {Point} from './point'
 import {INode} from './node'
 import {each, GET_TYPE} from '@/src/utils'
-import {delay} from '../utils'
+import {delay} from '../../utils'
 
 export interface Operate {
     isFocus: boolean

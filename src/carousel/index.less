@@ -1,0 +1,35 @@
+/** @format */
+
+@import '../sty/var.less';
+
+.rich-carousel {
+    width: 100vw;
+    overflow: hidden;
+    position: relative;
+    background-color: @carousel-background-color;
+    &__wrapper {
+        display: flex;
+    }
+    &__indicator {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translate3d(-50%, 0px, 0px);
+        display: flex;
+        z-index: 10;
+        &-item {
+            width: 6px;
+            height: 6px;
+            overflow: hidden;
+            margin-right: 6px;
+            border-radius: 50%;
+            background-color: @indicator-background-color;
+            &:last-child {
+                margin-right: 0;
+            }
+            &--active {
+                background-color: @indicator-active;
+            }
+        }
+    }
+}

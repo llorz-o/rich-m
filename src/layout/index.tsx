@@ -1,5 +1,4 @@
-import { delay } from '../editor/utils'
-import { createNamespace } from '../utils'
+import { createNamespace, delay } from '../utils'
 import './index.less'
 
 const [createComponent, b] = createNamespace("layout")
@@ -22,7 +21,8 @@ export default createComponent({
 	},
 	data() {
 		return {
-			isAnimationEnd: true
+			isAnimationEnd: true,
+			isRefresh: true,
 		}
 	},
 	render(h) {
@@ -33,7 +33,7 @@ export default createComponent({
 			<div class={b("header")}>
 				{slots("header")}
 			</div>
-			<div class={b("content")} data-height="10px">
+			<div class={b("content")}>
 				{slots()}
 			</div>
 			<div class={b("footer")}>
@@ -52,6 +52,12 @@ export default createComponent({
 				}, 100)
 			}
 		},
+		onAnimationStart(e) {
+			const { target } = e
+			if (target === this.$el) {
+				this.isRefresh = false
+			}
+		},
 		run(promiseList) {
 			if (this.isAnimationEnd) {
 				promiseList.forEach(fn => {
@@ -67,9 +73,19 @@ export default createComponent({
 	},
 	created() {
 		const animationendHandle = e => this.onAnimationEnd(e)
+		const animationStartHandle = e => this.onAnimationStart(e)
+		document.addEventListener("animationstart", animationStartHandle)
 		document.addEventListener('animationend', animationendHandle)
+		delay(() => {
+			if (this.isRefresh) {
+				this.$emit("animation-end")
+				this.isAnimationEnd = true
+				this.run(this.promise)
+			}
+		}, 200)
 		this.$on("hook:beforeDestroy", () => {
 			document.removeEventListener('animationend', animationendHandle)
+			document.removeEventListener('animationstart', animationStartHandle)
 		})
-	}
+	},
 })

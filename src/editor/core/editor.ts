@@ -2,7 +2,7 @@
 
 import {INode, Attributes} from './node'
 import {IPoint, Point} from './point'
-import {delay} from '../utils'
+import {delay} from '../../utils'
 import {Operate} from './operate'
 
 type editorConf = {

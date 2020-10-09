@@ -1,18 +1,8 @@
 import './index.less'
-import { createNamespace } from '../utils'
-import { delay } from './utils';
+import { createNamespace, delay } from '../utils'
 import { Point } from './core/point';
 import { Operate, Editor } from './core';
 const [createComponent, bem] = createNamespace("editor")
-/**
- * &#65279; 空占位符
- * const PL = /^\ufeff$/; 匹配空占位
- * const HAS_PL = /\ufeff/g;
- */
-const HAS_PL = /\ufeff/g;
-const PL = /^\ufeff$/; // 匹配空占位
-const ALL_PL = /^(\ufeff)+$/ // 匹配全部
-const ACTIVE_CLASS_NAME = "cursor_anchor"
 
 export default createComponent({
 	render(h) {

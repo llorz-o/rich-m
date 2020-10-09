@@ -14,7 +14,6 @@ export default {}
 
 <style lang="less">
 /** @format */
-
 @import '../../../src/sty/index.less';
 .block {
     height: 300px;
@@ -47,10 +46,10 @@ body,
     animation-name: enter;
     @keyframes enter {
         0% {
-            left: 100%;
+            opacity: 0;
         }
         to {
-            left: 0;
+            opacity: 1;
         }
     }
 }
@@ -59,9 +58,11 @@ body,
     @keyframes leave {
         0% {
             left: 0;
+            opacity: 1;
         }
         to {
-            left: -100%;
+            left: 0;
+            opacity: 0;
         }
     }
 }

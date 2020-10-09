@@ -1,27 +1,12 @@
 <template>
-  <layout class="l1" :promise.sync="promiseList">
-    <template #header>
-      <div class="header">
-        layout1
-      </div>
-    </template>
-    <div class="block">
-      <router-link to="/layout2" replace>
-        layout2
-      </router-link>
+  <div class="page">
+    <div class="view">
+      <div class="box" ref="box" :style="style"></div>
     </div>
-    <div v-for="(item) in list" :key="item">{{item}}</div>
-    <div v-for="(item) in list2" :key="item">{{item}}</div>
-    <template #footer>
-      <div class="footer">
-        <span>1</span>
-        <span>2</span>
-        <span>3</span>
-        <span>4</span>
-        <span>5</span>
-      </div>
-    </template>
-  </layout>
+    <div style="height:1000px">
+      h:1000px
+    </div>
+  </div>
 </template>
 
 <script>
@@ -30,73 +15,63 @@
 export default {
     data() {
         return {
-            list2: [],
-            list: [],
-            promiseList: [],
+            variable: 10,
         }
     },
-    methods: {
-        getData() {
-            setTimeout(() => {
-                this.promiseList.push(() => {
-                    this.list = 5
-                })
-            }, 4000)
-        },
-        getData2() {
-            setTimeout(() => {
-                this.promiseList.push(() => {
-                    this.list2 = ['a', 'b', 'c', 'd', 'e']
-                })
-            }, 0)
+    computed: {
+        style() {
+            return {
+                border: `1px solid red`,
+                width: `${100}px`,
+                height: `100px`,
+                transitionDuration: `${this.variable * 300}ms`,
+                transform: `translate3d(${this.variable * 10}px,${this.variable * 10}px,0)`,
+                position: `absolute`,
+            }
         },
     },
     created() {
-        this.getData()
-        this.getData2()
+        setInterval(() => {
+            this.variable = Math.random() * 10
+        }, 1000)
+    },
+    mounted() {
+        const box = this.$refs.box
     },
 }
 </script>
 
 <style lang="less">
 /** @format */
-.l1 {
-    .rich-layout__content {
-        &::before {
-            height: 40px;
-        }
-        &::after {
-            height: 50px;
+
+.page {
+    height: 101%;
+    .my-swipe {
+        height: 150px;
+        .van-swipe-item {
+            color: #fff;
+            font-size: 20px;
+            line-height: 150px;
+            text-align: center;
+            background-color: #39a9ed;
         }
     }
-}
-.block {
-    height: 200px;
-}
-.header {
-    height: 40px;
-    color: white;
-    line-height: 40px;
-    text-align: center;
-    background-color: red;
-    .fixed {
-        position: fixed;
+    .van-swipe__track,
+    .van-swipe-item {
+        position: absolute;
+        top: 0;
         left: 0;
+        bottom: 0;
         right: 0;
+        transition-duration: 300ms !important;
+        transform: translate(375px, 0px) translateZ(0px) !important;
     }
-}
-.footer {
-    height: 50px;
-    width: 100vw;
-    display: flex;
-    background-color: #d5d5d5;
-    white-space: nowrap;
-    span {
-        display: inline-block;
-        height: 50px;
-        line-height: 50px;
-        text-align: center;
-        flex: 1;
+
+    .view {
+        position: relative;
+        height: 100vw;
+        background-color: #6f9;
+        overflow: hidden;
     }
 }
 </style>

@@ -2,25 +2,21 @@
 
 .rich-layout {
     height: 100%;
+    min-height: 100%;
+    max-height: 100%;
     width: 100%;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     &__header {
-        height: 0px;
         z-index: 10;
     }
     &__content {
         flex: 1;
+        overflow: hidden;
         overflow-y: auto;
         touch-action: pan-y;
-        &::before,
-        &::after {
-            position: relative;
-            display: block;
-            content: '';
-            width: 100vw;
-        }
+        -webkit-overflow-scrolling: touch;
     }
     &__footer {
         height: 0px;
