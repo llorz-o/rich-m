@@ -8,7 +8,7 @@
       </Header>
     </template>
 
-    <notice-bar left-icon="volume-o" text="在代码阅读过程中人们说脏话的频率是衡量代码质量的唯一标准。在代码阅读过程中人们说脏话的频率是衡量代码质量的唯一标准。" />
+    <!-- <notice-bar left-icon="volume-o" text="在代码阅读过程中人们说脏话的频率是衡量代码质量的唯一标准。在代码阅读过程中人们说脏话的频率是衡量代码质量的唯一标准。" /> -->
 
     <pullup-loading :reqMethod="request">
       <div v-for="(item, index) in 100" :key="index">
@@ -22,11 +22,16 @@
 /** @format */
 
 export default {
+    data() {
+        return {
+            list: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        }
+    },
     methods: {
         request() {
             return new Promise(resolve => {
                 setTimeout(() => {
-                    let flag = false // Math.random() > 0.5
+                    let flag = Math.random() > 0.5
                     resolve({
                         finished: flag,
                         error: !flag,
@@ -37,3 +42,11 @@ export default {
     },
 }
 </script>
+
+<style lang="less" scoped>
+/** @format */
+
+.item {
+    height: 100px;
+}
+</style>

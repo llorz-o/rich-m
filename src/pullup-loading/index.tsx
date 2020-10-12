@@ -1,4 +1,4 @@
-import { createNamespace, debounce, delay } from "../utils";
+import { createNamespace, throttle, delay } from "../utils";
 import './index.less'
 
 const [createComponent, b] = createNamespace("pullup-loading")
@@ -105,7 +105,8 @@ export default createComponent({
 
 		return <div class={b()}>
 			<div class={b("wrapper")} style={this.wrapperOffsetSty}>
-				<div class={b("content")} onScroll={this.debounceOnScroll} onTouchstart={this.onTouchstart} onTouchmove={this.onTouchmove} onTouchend={this.onTouchend}>
+				<div class={b("content")} onScroll={this.throttleOnScroll} onTouchstart={this.onTouchstart}
+					onTouchmove={this.onTouchmove} onTouchend={this.onTouchend}>
 					{slots()}
 				</div>
 				<div class={b("loading")} ref="state" onClick={this.onClickError}>
@@ -151,6 +152,11 @@ export default createComponent({
 				const { pageY, clientY } = touch || {}
 
 				this.deltaY = (pageY || clientY) - this.startY
+
+				if (this.deltaY < 0 && e.cancelable) {
+					e.stopPropagation()
+					e.preventDefault()
+				}
 			}
 		},
 		onTouchend(e) {
@@ -184,6 +190,6 @@ export default createComponent({
 		},
 	},
 	created() {
-		this.debounceOnScroll = debounce(this.onContentScroll, 100)
+		this.throttleOnScroll = throttle(this.onContentScroll, 100)
 	},
 })
