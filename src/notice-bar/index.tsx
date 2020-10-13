@@ -14,6 +14,11 @@ export default createComponent({
 			componentWidth: 0,
 		}
 	},
+	watch: {
+		text(news, old) {
+			if (news !== old) this.refresh()
+		}
+	},
 	computed: {
 		contentSty() {
 			const { componentWidth, contentWidth } = this
@@ -37,9 +42,14 @@ export default createComponent({
 			</div>
 		</div>
 	},
+	methods: {
+		refresh() {
+			const { content } = this.$refs
+			if (content) this.contentWidth = (content as Element).clientWidth
+			if (this.$el) this.componentWidth = this.$el.clientWidth
+		}
+	},
 	mounted() {
-		const { content } = this.$refs
-		if (content) this.contentWidth = content.clientWidth
-		this.componentWidth = this.$el.clientWidth
+		this.refresh()
 	}
 })

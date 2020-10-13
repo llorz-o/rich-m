@@ -105,8 +105,13 @@ export default createComponent({
 
 		return <div class={b()}>
 			<div class={b("wrapper")} style={this.wrapperOffsetSty}>
-				<div class={b("content")} onScroll={this.throttleOnScroll} onTouchstart={this.onTouchstart}
-					onTouchmove={this.onTouchmove} onTouchend={this.onTouchend}>
+				<div
+					ref="content"
+					class={b("content")}
+					onScroll={this.throttleOnScroll}
+					onTouchstart={this.onTouchstart}
+					onTouchmove={this.onTouchmove}
+					onTouchend={this.onTouchend}>
 					{slots()}
 				</div>
 				<div class={b("loading")} ref="state" onClick={this.onClickError}>
@@ -116,25 +121,28 @@ export default createComponent({
 		</div>
 	},
 	methods: {
+		checkBottomOut() {
+			const { content } = this.$refs
+			if (content) {
+				const { clientHeight, scrollTop, scrollHeight } = (content as Element);
+				if ((scrollHeight - scrollTop - clientHeight) <= 0) {
+					this.isBottomOut = true
+				} else {
+					this.isBottomOut = false
+				}
+			}
+		},
 		onContentScroll(e) {
 			if (this.disable) return
 			if (this.state !== LOADING_STATE.nil) return this.isBottomOut = false
 
-			const { target, srcElement } = e
-			const el = target || srcElement
-			const { clientHeight, scrollTop, scrollHeight } = el
-
-			if (scrollHeight - scrollTop - clientHeight <= 0) {
-				this.isBottomOut = true
-			} else {
-				this.isBottomOut = false
-			}
-
+			this.checkBottomOut()
 		},
 		onTouchstart(e) {
 			if (this.disable) return
 			if (this.state !== LOADING_STATE.nil) return this.isBottomOut = false
 			this.isPan = true
+			this.checkBottomOut()
 			if (this.isBottomOut) {
 				const { touches, changedTouches } = e
 				const [touch] = touches || changedTouches
