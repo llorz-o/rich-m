@@ -44,9 +44,11 @@ export default createComponent({
 	},
 	methods: {
 		refresh() {
-			const { content } = this.$refs
-			if (content) this.contentWidth = (content as Element).clientWidth
-			if (this.$el) this.componentWidth = this.$el.clientWidth
+			this.$nextTick(() => {
+				const { content } = this.$refs
+				if (content) this.contentWidth = (content as Element).clientWidth
+				if (this.$el) this.componentWidth = this.$el.clientWidth
+			})
 		}
 	},
 	mounted() {
