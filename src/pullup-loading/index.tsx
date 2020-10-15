@@ -1,4 +1,4 @@
-import { createNamespace, throttle, delay } from "../utils";
+import { createNamespace, throttle, delay, getScroller } from "../utils";
 import './index.less'
 
 const [createComponent, b] = createNamespace("pullup-loading")
@@ -25,7 +25,7 @@ export default createComponent({
 	},
 	data() {
 		return {
-			contentEl: null,
+			scrollEl: null,
 			isBottomOut: false,
 
 			isPan: false,
@@ -104,16 +104,12 @@ export default createComponent({
 		}
 
 		return <div class={b()}>
-			<div class={b("wrapper")} style={this.wrapperOffsetSty}>
-				<div
-					ref="content"
-					class={b("content")}
-					onScroll={this.throttleOnScroll}
-					onTouchstart={this.onTouchstart}
-					onTouchmove={this.onTouchmove}
-					onTouchend={this.onTouchend}>
-					{slots()}
-				</div>
+			<div class={b("track")} ref="track" style={this.wrapperOffsetSty}
+				onScroll={this.throttleOnScroll}
+				onTouchstart={this.onTouchstart}
+				onTouchmove={this.onTouchmove}
+				onTouchend={this.onTouchend}>
+				{slots()}
 				<div class={b("loading")} ref="state" onClick={this.onClickError}>
 					{LoadingState}
 				</div>
@@ -122,9 +118,9 @@ export default createComponent({
 	},
 	methods: {
 		checkBottomOut() {
-			const { content } = this.$refs
-			if (content) {
-				const { clientHeight, scrollTop, scrollHeight } = (content as Element);
+			const { scrollEl } = this
+			if (scrollEl) {
+				const { clientHeight, scrollTop, scrollHeight } = (scrollEl as Element);
 				if ((scrollHeight - scrollTop - clientHeight) <= 0) {
 					this.isBottomOut = true
 				} else {
@@ -200,4 +196,7 @@ export default createComponent({
 	created() {
 		this.throttleOnScroll = throttle(this.onContentScroll, 100)
 	},
+	mounted() {
+		this.scrollEl = getScroller(this.$el)
+	}
 })
