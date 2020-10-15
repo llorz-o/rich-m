@@ -67,7 +67,9 @@ body,
 
 在`api`请求后将赋值的函数`push`入`promiseList`中,`layout`组件会在动画结束后进行赋值.
 
->页面渲染会影响动画的帧数,必须将赋值推迟至动画结束后
+>页面渲染会影响动画的帧数,必须将赋值推迟至动画结束后.
+>
+>但是组件卸载时仍然将影响到退场动画,可能的解决方案为路由回退前先卸载dom
 
 ```vue
 <layout :promise="promiseList">
@@ -88,10 +90,15 @@ export default {
                 // 请求api
                 this.promiseList.push(() => {
                     // 将赋值方法推入数组
-                    this.list = [1,2,3,4,5]
+                    this.list = 10000
                 })
             },2000)
-        }
+        },
+        uninstall() {
+            // 先清空数据再回退即可达到高帧率退场动画
+            this.list = 0
+            this.$nextTick(() => this.$router.go(-1))
+        },
     },
     create(){
         this.getData()
