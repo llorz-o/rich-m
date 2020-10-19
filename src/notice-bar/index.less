@@ -1,5 +1,5 @@
 /** @format */
-
+@import '../sty/var.less';
 .rich-notice-bar {
     display: flex;
     align-items: center;
@@ -12,12 +12,13 @@
         line-height: 24px;
     }
     &__content {
+        font-size: @fs-4;
         position: absolute;
         white-space: nowrap;
         animation-name: scroll;
         animation-timing-function: linear;
         animation-duration: 3s;
-		animation-iteration-count: infinite;
+        animation-iteration-count: infinite;
 
         @keyframes scroll {
             0% {

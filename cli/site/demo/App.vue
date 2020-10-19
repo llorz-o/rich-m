@@ -22,7 +22,9 @@ body,
     width: 100%;
     height: 100%;
     position: relative;
-    overflow: hidden;
+	overflow: hidden;
+	max-width: 375px;
+	margin: 0 auto;
 }
 .animated {
     position: absolute;

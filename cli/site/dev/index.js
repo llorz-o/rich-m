@@ -1,4 +1,4 @@
-import Vue from "vue"
+import Vue from 'vue'
 import VueRouter from 'vue-router'
 import '../index'
 import App from './App.vue'
@@ -8,60 +8,41 @@ import 'vant/lib/index.less';
 Vue.use(VueRouter)
 Vue.use(Vant)
 
-import home from './views/home.vue'
-import page2 from './views/page2.vue'
-import loading from './views/loading.vue'
-import layout from './views/layout.vue'
-import layout2 from './views/layout2.vue'
-import carousel from './views/carousel.vue'
 
 const _routes = [{
-		path: "/",
-		redirect: "/home"
+	path: "/",
+	meta: {
+		title: "路由列表"
 	},
-	{
-		path: "/home",
-		component: home,
+	component: () => import("./routes.vue")
+}]
+
+const requireComponent = require.context(
+	// 其组件目录的相对路径
+	'./views',
+	// 是否查询其子目录
+	true,
+	// 匹配基础组件文件名的正则表达式
+	/[A-z0-9-]+\.vue$/
+)
+
+requireComponent.keys().forEach(fileName => {
+	// 获取组件配置
+	const page = requireComponent(fileName)
+	// 获取组件的 PascalCase 命名
+	// 获取和目录深度无关的文件名
+	const componentName = fileName
+		.split('/')[1]
+		.replace(/\.\w+$/, '')
+
+	_routes.push({
+		path: `/${componentName}`,
+		component: page.default || page,
 		meta: {
-			title: "键盘key测试"
-		}
-	},
-	{
-		path: "/page2",
-		component: page2,
-		meta: {
-			title: "editor测试"
-		}
-	},
-	{
-		path: "/loading",
-		component: loading,
-		meta: {
-			title: "加载组件"
-		}
-	},
-	{
-		path: "/layout",
-		component: layout,
-		meta: {
-			title: "布局组件"
-		}
-	},
-	{
-		path: "/layout2",
-		component: layout2,
-		meta: {
-			title: "布局组件"
-		}
-	},
-	{
-		path: "/carousel",
-		component: carousel,
-		meta: {
-			title: "轮播组件"
-		}
-	},
-]
+			title: page.title || componentName
+		},
+	})
+})
 
 const $bus = new Vue({})
 

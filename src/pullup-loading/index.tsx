@@ -1,4 +1,5 @@
-import { createNamespace, throttle, delay, getScroller } from "../utils";
+import Hammer from 'hammerjs'
+import { createNamespace, throttle, delay, getScroller, isMobile } from "../utils";
 import './index.less'
 
 const [createComponent, b] = createNamespace("pullup-loading")
@@ -11,6 +12,7 @@ enum LOADING_STATE {
 }
 
 const TRIGGER_DISTANCE = 100
+let hammer;
 
 export default createComponent({
 	props: {
@@ -105,73 +107,74 @@ export default createComponent({
 
 		return <div class={b()}>
 			<div class={b("track")} ref="track" style={this.wrapperOffsetSty}
-				onScroll={this.throttleOnScroll}
-				onTouchstart={this.onTouchstart}
-				onTouchmove={this.onTouchmove}
-				onTouchend={this.onTouchend}>
+				onTouchstart={this.onTouchStart}
+				onTouchmove={this.onTouchMove}
+				onTouchend={this.onTouchEnd}
+			>
 				{slots()}
 				<div class={b("loading")} ref="state" onClick={this.onClickError}>
 					{LoadingState}
 				</div>
-			</div>
-		</div>
+			</div >
+		</div >
 	},
 	methods: {
+		// 检查是否禁用
+		checkDisable() {
+			if (this.disabled) return true
+			if (this.state !== LOADING_STATE.nil) return true
+		},
+		// 检查是否触底
 		checkBottomOut() {
 			const { scrollEl } = this
 			if (scrollEl) {
 				const { clientHeight, scrollTop, scrollHeight } = (scrollEl as Element);
 				if ((scrollHeight - scrollTop - clientHeight) <= 0) {
-					this.isBottomOut = true
+					return true
 				} else {
-					this.isBottomOut = false
+					return false
 				}
 			}
 		},
-		onContentScroll(e) {
-			if (this.disable) return
-			if (this.state !== LOADING_STATE.nil) return this.isBottomOut = false
-
-			this.checkBottomOut()
-		},
-		onTouchstart(e) {
-			if (this.disable) return
-			if (this.state !== LOADING_STATE.nil) return this.isBottomOut = false
+		onTouchStart(e) {
+			if (this.checkDisable()) return
+			if (!this.checkBottomOut()) return
+			const { targetTouches: [{
+				pageY
+			}] } = e
 			this.isPan = true
-			this.checkBottomOut()
-			if (this.isBottomOut) {
-				const { touches, changedTouches } = e
-				const [touch] = touches || changedTouches
-				const { pageY, clientY } = touch || {}
-
-				this.startY = pageY || clientY
-			}
+			this.startY = pageY
 		},
-		onTouchmove(e) {
-			if (this.disable) return
+		onTouchMove(e) {
+			if (this.checkDisable()) return
+			if (!this.checkBottomOut()) return
+			const { targetTouches: [{
+				pageY
+			}] } = e
 			this.isPan = true
-			if (this.isBottomOut) {
-				const { touches, changedTouches } = e
-				const [touch] = touches || changedTouches
-				const { pageY, clientY } = touch || {}
-
-				this.deltaY = (pageY || clientY) - this.startY
-
-				if (this.deltaY < 0 && e.cancelable) {
-					e.stopPropagation()
-					e.preventDefault()
-				}
-			}
+			this.deltaY = pageY - this.startY
 		},
-		onTouchend(e) {
-			if (this.disable) return
+		onTouchEnd() {
+			this.onPanEnd()
+		},
+		onPanStart(e) {
+			if (this.checkDisable()) return
+			if (!this.checkBottomOut()) return
+			this.isPan = true
+			this.startY = e.center.y
+		},
+		onPanMove(e) {
+			if (this.checkDisable()) return
+			if (!this.checkBottomOut()) return
+			this.isPan = true
+			this.deltaY = e.center.y - this.startY
+		},
+		onPanEnd() {
 			this.startY = 0
 			this.deltaY = 0
 			this.isPan = false
-
 			// 松开时为触发状态则请求api
 			if (this.isTrigger) this.request()
-
 		},
 		onClickError() {
 			if (this.disable) return
@@ -193,10 +196,29 @@ export default createComponent({
 			})
 		},
 	},
-	created() {
-		this.throttleOnScroll = throttle(this.onContentScroll, 100)
-	},
 	mounted() {
+
+		hammer = new Hammer(this.$el, { domEvents: false })
+
 		this.scrollEl = getScroller(this.$el)
+
+		hammer.get("pan").set({
+			direction: Hammer.DIRECTION_VERTICAL
+		})
+
+		hammer.on("panstart", e => this.onPanStart(e))
+
+		hammer.on("panmove", e => this.onPanMove(e))
+
+		hammer.on("panend", () => this.onPanEnd())
+
+		hammer.on("pancancel", () => this.onPanEnd())
+
+		if (isMobile()) {
+			hammer.get('pan').set({
+				enable: false
+			})
+		}
+
 	}
 })

@@ -23,10 +23,12 @@ export default createComponent({
 
 				if (fillIndex === 0) {
 					return {
+						flexBasis: `${clientWidth}px`,
 						transform: `translate3d(${childrenLength * clientWidth}px,0px,0px)`,
 					}
 				} else {
 					return {
+						flexBasis: `${clientWidth}px`,
 						transform: `translate3d(-${childrenLength * clientWidth}px,0px,0px)`,
 					}
 				}
@@ -34,6 +36,7 @@ export default createComponent({
 			}
 
 			return {
+				flexBasis: `${clientWidth}px`,
 				transform: `translate3d(0px,0px,0px)`,
 			}
 		},

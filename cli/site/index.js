@@ -61,7 +61,7 @@ requireDemoComponent.keys().forEach(fileName => {
 	const componentConfig = requireDemoComponent(fileName)
 	// 获取组件的 PascalCase 命名
 	const componentName = lowerFirst(
-		kebabCase(
+		camelCase(
 			// 获取和目录深度无关的文件名
 			fileName
 			.split('/')[1]

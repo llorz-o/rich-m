@@ -15,7 +15,7 @@
       </tabs>
     </Block>
     <Block title="滑动切换与粘性布局">
-      <tabs animated swiper sticky offset-top="40px">
+      <tabs animated swiper sticky offset-top="0px">
         <tab title="标签1">
           <Fill>1</Fill>
         </tab>

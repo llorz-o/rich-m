@@ -20,7 +20,7 @@
 
 <script>
 /** @format */
-
+export const title = 'Page2'
 export default {
     data() {
         return {

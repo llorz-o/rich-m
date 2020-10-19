@@ -6,7 +6,10 @@
     height: 85.71428vw;
     overflow: hidden;
     &__wrapper {
-        position: relative;
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
     }
     &__mask {
         position: absolute;
@@ -79,7 +82,7 @@
                 top: 50%;
                 left: 50%;
                 transform: translate3d(-50%, -50%, 0);
-                font-size: 40vw;
+                font-size: 40px;
                 text-align: center;
                 color: @calendar-panel-background-color;
                 line-height: 100%;
@@ -97,10 +100,9 @@
     &__day {
         position: relative;
         z-index: 1;
-        width: 14.2857%;
-        height: 14.2857vw;
+		width: 14.2857%;
+		line-height: 20px;
         text-align: center;
-        line-height: 14.2857vw;
         opacity: 0.3;
 
         &--to-month {

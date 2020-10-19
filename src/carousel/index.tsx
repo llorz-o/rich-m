@@ -139,6 +139,9 @@ export default createComponent({
 	},
 	mounted() {
 		const hammer = new Hammer(this.$el)
+		const { clientWidth = 0 } = this.$el
+
+		this.clientWidth = clientWidth
 
 		hammer.get("pan").set({
 			direction: Hammer.DIRECTION_HORIZONTAL
