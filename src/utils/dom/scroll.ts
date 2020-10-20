@@ -3,7 +3,7 @@ type ScrollElement = HTMLElement | Window
 
 const REG_OVERFOLLOW_SCROLL = /scroll|auto/i
 
-export function getScroller(el: HTMLElement, root: ScrollElement = window) {
+export function getScroller(el: HTMLElement, root: ScrollElement = window): HTMLElement {
     let node = el
 
     while (node && node.tagName !== 'HTML' && node.nodeType === 1 && node !== root) {

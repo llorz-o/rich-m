@@ -1,6 +1,7 @@
 /** @format */
 
 import Vue from 'vue'
+import {ExtendedVue} from 'vue/types/vue'
 
 type MixinChildrenOptions = {
     indexKey?: any
@@ -9,8 +10,8 @@ type MixinChildrenOptions = {
 export function MixinParent(
     parent: string,
 ): {
-    provide(): Record<string, any>
-    data(): Record<string, any>
+    provide(): Record<string, unknown>
+    data(): Record<string, unknown>
 } {
     return {
         provide() {
@@ -26,7 +27,7 @@ export function MixinParent(
     }
 }
 
-export function MixinChildren(parent: string, options: MixinChildrenOptions = {}) {
+export function MixinChildren(parent: string, options: MixinChildrenOptions = {}): unknown {
     const indexKey = options.indexKey || 'index'
 
     return Vue.extend({
