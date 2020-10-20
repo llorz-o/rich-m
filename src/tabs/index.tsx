@@ -35,6 +35,11 @@ export default createComponent({
 		offsetTop: {
 			type: String,
 			default: "0px"
+		},
+		// 延迟渲染
+		lazy: {
+			type: Boolean,
+			default: true
 		}
 	},
 	mixins: [MixinParent('xTabs')],

@@ -131,6 +131,7 @@ Vue.component(Tabs.name, Tabs);
 | swipe-threshold | 超过该值将开启 title 滚动    | Number         | 4             |
 | type            | 样式,["card"]                | String         | default       |
 | offset-top | 粘性布局顶部距离 | String | 0px |
+| lazy | 懒渲染 | Boolean | true |
 
 ### Tab Props
 
