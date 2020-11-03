@@ -198,26 +198,24 @@ export default createComponent({
 	},
 	mounted() {
 
-		hammer = new Hammer(this.$el, { domEvents: false })
+		alert(isMobile())
 
-		this.scrollEl = getScroller(this.$el)
+		if (!isMobile()) {
+			hammer = new Hammer(this.$el, { domEvents: false })
 
-		hammer.get("pan").set({
-			direction: Hammer.DIRECTION_VERTICAL
-		})
+			this.scrollEl = getScroller(this.$el)
 
-		hammer.on("panstart", e => this.onPanStart(e))
-
-		hammer.on("panmove", e => this.onPanMove(e))
-
-		hammer.on("panend", () => this.onPanEnd())
-
-		hammer.on("pancancel", () => this.onPanEnd())
-
-		if (isMobile()) {
-			hammer.get('pan').set({
-				enable: false
+			hammer.get("pan").set({
+				direction: Hammer.DIRECTION_VERTICAL
 			})
+
+			hammer.on("panstart", e => this.onPanStart(e))
+
+			hammer.on("panmove", e => this.onPanMove(e))
+
+			hammer.on("panend", () => this.onPanEnd())
+
+			hammer.on("pancancel", () => this.onPanEnd())
 		}
 
 	}

@@ -1,13 +1,26 @@
 <template>
   <div id="app">
     <router-view></router-view>
+    <div>
+      <ul>
+        <li class="message" v-for="(item, index) in msgList" :key="index">
+          {{item}}
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
 /** @format */
-
-export default {}
+export default {
+    data() {
+        return {
+            msgList: [],
+        }
+    },
+    created() {},
+}
 </script>
 
 <style lang="less">

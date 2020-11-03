@@ -1,7 +1,6 @@
 /** @format */
 
 import Vue from 'vue'
-import {ExtendedVue} from 'vue/types/vue'
 
 type MixinChildrenOptions = {
     indexKey?: any

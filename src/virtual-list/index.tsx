@@ -45,7 +45,7 @@ export default createComponent({
 		const parent = parentElement || parentNode
 		const scroller = getScroller(parent)
 
-		const throttleScroll = throttle(this.onScroll, 50)
+		const throttleScroll = throttle(this.onScroll, 10)
 		const debounceScroll = debounce(() => {
 			// 节点校准
 			// console.log(1);

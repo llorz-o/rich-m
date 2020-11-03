@@ -1,6 +1,5 @@
 <template>
   <div class="item">
-    {{source.value}}
   </div>
 </template>
 
@@ -8,19 +7,7 @@
 /** @format */
 
 export default {
-    props: {
-        index: {
-            // index of current item
-            type: Number,
-        },
-        source: {
-            // here is: {uid: 'unique_1', text: 'abc'}
-            type: Object,
-            default() {
-                return {}
-            },
-        },
-    },
+    props: {},
 }
 </script>
 
